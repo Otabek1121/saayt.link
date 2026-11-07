@@ -193,3 +193,13 @@ body{background:#faf7f2;color:#302c2b}.sidebar{background:#f0ece6;border-color:#
 .restaurant-style-national .restaurant-dish .entry-photos .photo-gallery-grid>button{height:320px}
 }
 .restaurant-site .restaurant-brand strong{color:var(--restaurant-ink)}
+
+/* Public entry stays outside customer template styles and covers every design. */
+.client-cabinet-entry{padding:16px 24px;text-align:right;background:#fff;color:#181818;font:500 14px/20px Manrope,sans-serif}
+.client-cabinet-entry a{display:inline-block;color:inherit;padding:8px 12px;border:1px solid currentColor;border-radius:8px;text-decoration:none;transition:opacity 300ms cubic-bezier(.22,1,.36,1)}
+.client-cabinet-entry a:hover{opacity:.7}.client-cabinet-entry a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.client-access-panel{padding:24px;margin-bottom:24px;border:1px solid var(--border,#ddd);border-radius:12px}
+.client-access-panel h2{font-size:24px;line-height:32px;margin:0 0 8px}.client-access-panel p{font-size:14px;line-height:20px}
+.client-access-panel form,.client-access-member{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:16px 0}.client-access-panel label{display:grid;gap:8px;flex:1;min-width:0}.client-access-panel input{width:100%;min-height:40px;padding:8px 12px;border:1px solid #aaa;border-radius:8px}
+.client-access-member{align-items:center;justify-content:space-between;overflow-wrap:anywhere}
+@media(max-width:600px){.client-access-panel{padding:16px}.client-access-panel form{display:grid}}

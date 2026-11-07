@@ -44,7 +44,7 @@ export async function handleAuth(request:Request,env:Cloudflare.Env):Promise<Res
   if(!['/signin-with-chatgpt','/signout-with-chatgpt','/api/auth/google/callback'].includes(path))return null;
   if(request.method!=='GET')return new Response(null,{status:405,headers:{Allow:'GET'}});
   if(env.AUTH_PROVIDER!=='google'||!env.SESSION_SECRET||env.SESSION_SECRET.length<32)return unavailable();
-  if(path==='/signout-with-chatgpt')return redirect(safeReturnTo(url.searchParams.get('return_to')),[cookie(SESSION,'',0),cookie(FLOW,'',0),cookie('saayt-workspace','',0)]);
+  if(path==='/signout-with-chatgpt')return redirect(safeReturnTo(url.searchParams.get('return_to')),[cookie(SESSION,'',0),cookie(FLOW,'',0),cookie('saayt-workspace','',0),cookie('saayt-client-site','',0)]);
   if(!env.GOOGLE_CLIENT_ID||!env.GOOGLE_CLIENT_SECRET)return unavailable();
   const origin=env.PUBLIC_SITE_ORIGIN;
   if(!origin||new URL(origin).origin!==url.origin||url.protocol!=='https:')return unavailable();
@@ -76,7 +76,7 @@ export async function handleAuth(request:Request,env:Cloudflare.Env):Promise<Res
     const mapped=await env.DB.prepare('SELECT user_id FROM auth_legacy_identities WHERE email = ?').bind(email).first<{user_id:string}>();
     const user:SessionUser={userId:mapped?.user_id??'google:'+profile.sub,email,displayName:profile.name||email,fullName:profile.name||null};
     const session=await seal({...user,purpose:'session',exp:Math.floor(Date.now()/1000)+604800},env.SESSION_SECRET);
-    return redirect(safeReturnTo(typeof flow.returnTo==='string'?flow.returnTo:null),[clear,cookie(SESSION,session,604800),cookie('saayt-workspace','',0)]);
+    return redirect(safeReturnTo(typeof flow.returnTo==='string'?flow.returnTo:null),[clear,cookie(SESSION,session,604800),cookie('saayt-workspace','',0),cookie('saayt-client-site','',0)]);
   }catch{
     return new Response('Не удалось войти. Вернитесь на сайт и повторите вход.',{status:400,headers:{'Set-Cookie':clear,'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8'}});
   }

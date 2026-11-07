@@ -27,5 +27,5 @@ assert.equal((await readSession(new Headers({cookie:session.split(';')[0]}),env)
 globalThis.fetch=async url=>url==='https://oauth2.googleapis.com/token'?Response.json({access_token:'x',token_type:'Bearer'}):Response.json({sub:'x',email:'owner@example.test',email_verified:false});
 assert.equal((await handleAuth(callback(flow.state),env)).status,400);
 globalThis.fetch=originalFetch;
-const out=await handleAuth(new Request('https://saayt.link/signout-with-chatgpt'),env);assert.equal(out.headers.getSetCookie().length,3);assert(out.headers.getSetCookie().every(x=>x.endsWith('Max-Age=0')));
+const out=await handleAuth(new Request('https://saayt.link/signout-with-chatgpt'),env);assert.equal(out.headers.getSetCookie().length,4);assert(out.headers.getSetCookie().every(x=>x.endsWith('Max-Age=0')));
 console.log('PASS: signed sessions, expiry, tampering, duplicate cookies, forged headers, safe redirects, PKCE, OAuth state, server token exchange, verified email, explicit legacy ownership mapping and logout.');
