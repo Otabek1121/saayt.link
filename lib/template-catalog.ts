@@ -1,3 +1,4 @@
+import {cardText} from './contact-card';
 import {hostelTemplate} from './hostel';
 import {restaurantTemplate} from './restaurant';
 import {text,nativeText} from './languages';
@@ -5,7 +6,7 @@ import {imagePath} from './visuals';
 import {presets,type Niche} from './niches';import {generate,normalizeSpec,type Spec} from './spec';
 export const templateStyles={editorial:{label:'Минимализм',name:'Clarity',color:'#3f5963'},soft:{label:'Мягкий',name:'Atelier',color:'#87516a'},architectural:{label:'Архитектурный',name:'Structure',color:'#756047'},immersive:{label:'Фотографический',name:'Panorama',color:'#456157'}} as const;
 export type TemplateStyle=keyof typeof templateStyles;
-export type Template={id:string;niche:Niche;style:TemplateStyle;name:string;description:string;headline:string;layout:string;color:string;restaurantStyle?:Spec['restaurantStyle']};
+export type Template={id:string;niche:Niche;style:TemplateStyle;name:string;description:string;headline:string;layout:string;color:string;restaurantStyle?:Spec['restaurantStyle'];pageType?:Spec['pageType']};
 const designs:[Niche,string,string,string,string,TemplateStyle][]=[
 ['hostel','Точка отдыха','Ваше место в новом городе','stay','#347263','editorial'],
 ['restaurant','За столом','Место для вкусных встреч','banquet','#703b2a','immersive'],
@@ -34,6 +35,7 @@ const designs:[Niche,string,string,string,string,TemplateStyle][]=[
 ['generic','Точка','Ваше дело заслуживает своего сайта','studio','#5056a0','editorial']];
 export const templates:Template[]=designs.map(([niche,name,headline,layout,color,style])=>({id:'forma-'+niche,niche,name,headline,layout,color,style,description:presets[niche].description,...(niche==='restaurant'?{restaurantStyle:'national' as const}: {})}));
 templates.push({id:'forma-restaurant-fastfood',niche:'restaurant',style:'editorial',name:'На ходу',description:'Фастфуд: бургеры, пицца и любимые закуски.',headline:'Большой вкус. Твой ритм.',layout:'shop',color:'#9c3b24',restaurantStyle:'fastfood'}, {id:'forma-restaurant-japanese',niche:'restaurant',style:'architectural',name:'Тихий вкус',description:'Японская кухня: лаконичное меню и акцент на деталях.',headline:'Вкус в каждой детали.',layout:'atelier',color:'#b74737',restaurantStyle:'japanese'});
+templates.unshift({id:'forma-contact-card',niche:'generic',style:'soft',name:'Визитка',description:'Телефоны, сайт и социальные сети. Фото внизу, QR-код и свой цвет.',headline:'Все контакты. Одна визитка.',layout:'contact',color:'#dfe8f3',pageType:'contact-card'});
 export function makeTemplate(t:Template,language:Spec['language']='ru'){
  const s=generate(({ru:'Ваш бренд',uz:'Brendingiz',en:'Your brand',kk:'Сіздің брендіңіз',ky:'Сиздин брендиңиз',tg:'Бренди шумо'})[language],t.niche,'',language,presets[t.niche].label);
  const stock=text(language,'Фото для примера','Namuna surat','Illustrative stock photograph');
@@ -41,6 +43,7 @@ export function makeTemplate(t:Template,language:Spec['language']='ru'){
  gallery:[{src:imagePath(t.niche),alt:stock,x:50,y:50,fit:'cover'}],
  items:s.items.length?s.items:s.services.map((title,i)=>({id:'example-'+i,title,description:text(language,'Пример карточки. Замените название и описание перед публикацией.','Namuna. Nashrdan oldin nom va tavsifni almashtiring.','Example card. Replace the title and description before publishing.'),category:text(language,'Примеры','Namunalar','Examples'),images:i===0?[{src:imagePath(t.niche),alt:stock,x:50,y:50,fit:'cover'}]:[],meta1:'',meta2:'',meta3:''})),
  templateStyle:t.style,templateId:t.id,color:t.color,sections:{...s.sections,motion:true}});
+ if(t.pageType==='contact-card')return normalizeSpec({...base,pageType:'contact-card',headline:cardText(language,'title'),description:cardText(language,'bio'),color:t.color,heroImage:null,logo:null,gallery:[],items:[],services:[],team:[],faq:[],about:'',details:{},sections:{about:false,items:false,gallery:false,team:false,faq:false,process:false,motion:false},contactCard:{showQr:true,links:['website','phone','phone','instagram','telegram'].map((kind,i)=>({id:'contact-'+i,kind,label:'',value:'',caption:'',group:''}))}});
  return t.niche==='hostel'?normalizeSpec(hostelTemplate(base)):t.niche==='restaurant'?normalizeSpec(restaurantTemplate({...base,restaurantStyle:t.restaurantStyle||'classic'})):base;
 }
 export function templateDesign(id?:string){return templates.find(t=>t.id===id)}

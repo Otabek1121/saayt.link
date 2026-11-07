@@ -1,0 +1,2 @@
+import {headers} from 'next/headers';import {LANGUAGE_COOKIE,publicLanguage,type PublicLanguage} from './public-i18n';
+export async function requestLanguage(query:unknown):Promise<PublicLanguage>{const selected=publicLanguage(query);if(selected)return selected;const cookie=(await headers()).get('cookie')?.split(';').map(x=>x.trim()).find(x=>x.startsWith(LANGUAGE_COOKIE+'='))?.slice(LANGUAGE_COOKIE.length+1);return publicLanguage(cookie)||'ru'}

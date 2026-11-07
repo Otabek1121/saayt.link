@@ -1,0 +1,42 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "saayt-link",
+  "main": "worker/cloudflare.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "observability": {"enabled": true,"head_sampling_rate": 0.1},
+  "vars": {
+    "AUTH_PROVIDER": "google",
+    "SALES_ADMIN_EMAIL": "theazik00@gmail.com",
+    "PUBLIC_SITE_ORIGIN": "https://saayt.link",
+    "PREVIOUS_SITE_ORIGIN": "https://saayt-link.theazik00.workers.dev"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "saayt-link-db",
+      "database_id": "a959d790-3e13-449d-9665-80c64cac84e4",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "saayt-link-media"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/1 * * * *"
+    ]
+  },
+  "routes": [
+    {
+      "pattern": "saayt.link",
+      "custom_domain": true
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+'use client';
+export function trackFunnel(event:'home_view'|'template_preview'|'editor_start',key=''){try{const slot='saayt-event:'+new Date().toISOString().slice(0,10)+':'+event+':'+key;if(sessionStorage.getItem(slot))return;sessionStorage.setItem(slot,'1');void fetch('/api/funnel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event}),keepalive:true}).catch(()=>{})}catch{}}
