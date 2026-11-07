@@ -1455,6 +1455,30 @@ export const publicTranslations:Record<string,readonly [string,string,string,str
     "Жаңа оқиғаға арналған орын",
     "A place for a new story",
     "Ҷой барои қиссаи нав"
+  ],
+  "Визитка": [
+    "Vizitka",
+    "Визитка",
+    "Business card",
+    "Корти тамос"
+  ],
+  "Визитки": [
+    "Vizitkalar",
+    "Визиткалар",
+    "Business cards",
+    "Кортҳои тамос"
+  ],
+  "Контакты и ссылки": [
+    "Aloqa va havolalar",
+    "Байланыс және сілтемелер",
+    "Contacts and links",
+    "Тамос ва пайвандҳо"
+  ],
+  "Телефоны, сайт и социальные сети. Фото внизу, QR-код и свой цвет.": [
+    "Telefonlar, sayt va ijtimoiy tarmoqlar. Pastda surat, QR kod va o‘z rangingiz.",
+    "Телефондар, сайт және әлеуметтік желілер. Төменде фото, QR код және өз түсіңіз.",
+    "Phones, website and social profiles. A bottom photo, QR code and your own colour.",
+    "Телефонҳо, сомона ва шабакаҳои иҷтимоӣ. Акс дар поён, рамзи QR ва ранги худ."
   ]
 };
 export function uiText(language:PublicLanguage,ru:string){if(language==='ru')return ru;return publicTranslations[ru]?.[language==='uz'?0:language==='kk'?1:language==='en'?2:3]??ru}
