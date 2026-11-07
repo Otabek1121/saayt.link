@@ -3,17 +3,26 @@
   "name": "saayt-link",
   "main": "worker/cloudflare.ts",
   "compatibility_date": "2026-05-15",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": true,
   "vars": {
     "AUTH_PROVIDER": "google",
-    "PUBLIC_SITE_ORIGIN": "https://saayt.link"
+    "PUBLIC_SITE_ORIGIN": "https://saayt-link.theazik00.workers.dev"
   },
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "saayt-link-db",
-    "database_id": "a959d790-3e13-449d-9665-80c64cac84e4",
-    "migrations_dir": "drizzle"
-  }],
-  "r2_buckets": [{"binding":"BUCKET","bucket_name":"saayt-link-media"}]
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "saayt-link-db",
+      "database_id": "a959d790-3e13-449d-9665-80c64cac84e4",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "saayt-link-media"
+    }
+  ]
 }
