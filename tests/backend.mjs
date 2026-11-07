@@ -8,6 +8,7 @@ sql.exec(readFileSync(new URL('../drizzle/0001_broken_lucky_pierre.sql',import.m
 sql.exec(readFileSync(new URL('../drizzle/0002_white_firebird.sql',import.meta.url),'utf8'));
 sql.exec(readFileSync(new URL('../drizzle/0003_lucky_guardsmen.sql',import.meta.url),'utf8'));
 sql.exec(readFileSync(new URL('../drizzle/0004_absent_doomsday.sql',import.meta.url),'utf8'));
+sql.exec(readFileSync(new URL('../drizzle/0006_project_clients.sql',import.meta.url),'utf8'));
 function statement(query,params=[]){return {bind(...p){return statement(query,p)},async run(){const out=sql.prepare(query).run(...params);return {success:true,results:[],meta:{changes:Number(out.changes)}}},async all(){return {success:true,results:sql.prepare(query).all(...params),meta:{}}},async raw(){const stmt=sql.prepare(query);stmt.setReturnArrays(true);return stmt.all(...params)}}}
 const objects=new Map();globalThis.__testEnv={DB:{prepare:statement},BUCKET:{async put(key,bytes,options){objects.set(key,{bytes,options})},async get(key){const value=objects.get(key);return value?{body:value.bytes}:null},async delete(key){objects.delete(key)}}};globalThis.__identity=new Headers();
 registerHooks({resolve(specifier,context,next){if(specifier==='cloudflare:workers')return {url:'data:text/javascript,export const env=globalThis.__testEnv',shortCircuit:true};if(specifier==='next/headers')return {url:'data:text/javascript,export async function headers(){return globalThis.__identity}',shortCircuit:true};if(specifier==='next/navigation')return {url:'data:text/javascript,export function redirect(url){throw Error(url)}',shortCircuit:true};if(specifier.startsWith('.')&&context.parentURL?.startsWith('file:')){const base=new URL(specifier,context.parentURL);for(const suffix of ['.ts','/index.ts']){const url=base.href+suffix;if(existsSync(fileURLToPath(url)))return next(url,context)}}return next(specifier,context)}});
@@ -166,4 +167,37 @@ await status(await workspaces.POST(json({ownerId:'staff'})),200);identity('staff
 identity('owner-a');await status(await members.POST(json({email:'staff@example.test',alias:'admin2'})),201);identity('staff');await status(await workspaces.POST(json({ownerId:'owner-a'})),200);identity('staff','owner-a');assert.equal((await status(await workspaces.GET(),200)).currentRole,'editor');
 identity(null);const publiclyShared=await status(await publicRequest('team-restaurant'),200);assert.equal(publiclyShared.spec.name,'Updated by admin1');assert(!JSON.stringify(publiclyShared).includes('staff@example.test'));
 console.log('PASS: email-bound team invitations, personal/shared workspace isolation, explicit acceptance, HttpOnly selection, cross-origin rejection, shared project/photo creation and edits, publication, protected owner actions, guest inbox access, cross-owner denial, immediate revocation across API/media/guests, reinvitation and public contact privacy.');
+// Site clients receive access to exactly one project, never the whole studio.
+const clientsApi=await import('../app/api/projects/[id]/clients/route.ts');
+const manageApi=await import('../app/s/[slug]/manage/route.ts');
+identity('owner-a');
+const clientSpec=catalog.makeTemplate(catalog.templates.find(t=>t.niche==='restaurant'));clientSpec.name='Client restaurant';clientSpec.phone='+998 90 111 22 33';
+const assigned=await status(await project.POST(json({spec:clientSpec,publish:true,public:true,publicSlug:'client-access-qa'})),200);
+const clientOther=await status(await project.POST(json({spec:generate('Other private','restaurant')})),200);
+const clientParams={params:Promise.resolve({id:assigned.id})};
+await status(await clientsApi.POST(json({email:'client-qa@example.test',action:'grant'}),clientParams),200);
+identity('owner-b');await status(await clientsApi.POST(json({email:'thief@example.test',action:'grant'}),clientParams),403);
+identity('client-qa');
+const enter=await manageApi.GET(new Request('https://unit.test/s/client-access-qa/manage'),{params:Promise.resolve({slug:'client-access-qa'})});assert.equal(enter.status,302);assert.match(enter.headers.get('location'),/studio\?project=/);
+function clientIdentity(){identity('client-qa');globalThis.__identity.set('cookie','saayt-client-site='+assigned.id)}
+clientIdentity();let clientRows=await status(await project.GET(),200);assert.equal(clientRows.length,1);assert.equal(clientRows[0].id,assigned.id);
+await status(await project.POST(json({id:clientOther.id,revision:1,spec:clientSpec})),403);
+await status(await project.POST(json({spec:clientSpec})),403);
+await status(await clientsApi.GET(new Request('https://unit.test'),clientParams),403);
+await status(await project.PATCH(json({id:assigned.id,revision:1,action:'duplicate'},'PATCH')),403);
+const inaccessible=await manageApi.GET(new Request('https://unit.test/s/qa-no-access/manage'),{params:Promise.resolve({slug:'qa-no-access'})});assert.equal(inaccessible.status,404);
+const privateAssetId=sql.prepare('SELECT id FROM media WHERE owner=?').get('owner-a')?.id;
+if(privateAssetId){assert.equal((await mediaFile.GET(new Request('http://unit.test'),{params:Promise.resolve({id:privateAssetId})})).status,404);assert(!(await status(await media.GET(),200)).some(x=>x.id===privateAssetId))}
+const clientForm=new FormData();clientForm.append('file',new File([png],'client.png',{type:'image/png'}));
+const clientPhoto=await status(await media.POST(new Request('http://unit.test',{method:'POST',body:clientForm})),201);
+assert.equal(sql.prepare('SELECT project_id FROM media WHERE id=?').get(clientPhoto.id).project_id,assigned.id);
+assert.equal((await mediaFile.GET(new Request('http://unit.test'),{params:Promise.resolve({id:clientPhoto.id})})).status,200);
+clientSpec.name='Client changed name';clientSpec.phone='+998 90 999 88 77';clientSpec.items[0].title='Client changed dish';clientSpec.heroImage={src:clientPhoto.src,alt:'Client',x:50,y:50,fit:'cover'};
+await status(await project.POST(json({id:assigned.id,revision:1,spec:clientSpec,publish:true})),200);
+assert.equal(JSON.parse(sql.prepare('SELECT published FROM projects WHERE id=?').get(assigned.id).published).items[0].title,'Client changed dish');
+identity('owner-a');await status(await clientsApi.POST(json({email:'client-qa@example.test',action:'revoke'}),clientParams),200);
+clientIdentity();await status(await project.GET(),401);await status(await media.GET(),401);
+identity(null);const unauth=await manageApi.GET(new Request('https://unit.test/s/client-access-qa/manage'),{params:Promise.resolve({slug:'client-access-qa'})});assert.equal(unauth.status,302);assert.match(unauth.headers.get('location'),/signin-with-chatgpt/);
+console.log('PASS: per-site email grants, public login entry, single-project isolation, no client self-grants or copies, private media isolation, scoped uploads, client editing/publication and immediate revocation.');
+
 sql.close();
