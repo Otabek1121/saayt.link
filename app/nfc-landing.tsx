@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect,useState} from 'react';
-import {ArrowUpRight,ArrowRight,Check,ChevronDown,Contact,Globe2,Instagram,MapPin,Menu,MousePointerClick,Nfc,Phone,Play,ShieldCheck,Smartphone,Star,Wifi, X} from 'lucide-react';
+import {ArrowUpRight,ArrowRight,Check,ChevronDown,Contact,Globe2,Instagram,MapPin,Menu,Nfc,Phone,ShieldCheck,Smartphone,Star,Wifi,X} from 'lucide-react';
 import './nfc-landing.css';
 
 const products=[
@@ -91,6 +91,6 @@ export default function NfcLanding(){
    <section className="nfc-section nfc-faq" id="faq"><div className="nfc-shell nfc-faq-grid"><div><span className="nfc-section-label">06 / ПОЛЕЗНО ЗНАТЬ</span><h2>Частые<br/><em>вопросы.</em></h2><p>Не нашли ответ? Создайте цифровую страницу в конструкторе и посмотрите, как всё устроено.</p><a className="nfc-inline-link" href="/studio">Открыть конструктор <ArrowUpRight size={18}/></a></div><div className="nfc-faq-list">{faq.map(([question,answer],i)=><div className={'nfc-faq-item '+(openedFaq===i?'active':'')} key={question}><button aria-expanded={openedFaq===i} onClick={()=>setOpenedFaq(openedFaq===i?null:i)}><span>{question}</span><ChevronDown size={19}/></button>{openedFaq===i&&<p>{answer}</p>}</div>)}</div></div></section>
    <section className="nfc-cta-section"><div className="nfc-shell nfc-cta-inner"><span className="nfc-section-label">НАЧНИТЕ СЕГОДНЯ</span><h2>Ваш бизнес заслуживает<br/><em>лучшего первого впечатления.</em></h2><p>Создайте современную цифровую визитку и делитесь ею через ссылку, QR-код или NFC.</p><div className="nfc-cta-buttons"><a className="nfc-button nfc-button-light" href="/studio">Создать свою страницу <ArrowUpRight size={20}/></a><a className="nfc-button nfc-button-outline" href="/templates">Посмотреть шаблоны <ArrowRight size={19}/></a></div><div className="nfc-cta-decoration">S.</div></div></section>
   </main>
-  <footer className="nfc-footer"><div className="nfc-shell nfc-footer-top"><div><a className="nfc-logo" href="#top">saayt<span>.</span>link</a><p>Умные решения для современного бизнеса.<br/>NFC • QR • Цифровые страницы</p></div><div className="nfc-footer-links"><a href="#products">Продукты</a><a href="#how">Как это работает</a><a href="#works">Наши работы</a><a href="#faq">FAQ</a></div><div className="nfc-footer-links"><a href="/templates">Шаблоны</a><a href="/studio">Конструктор</a><a href="/studio?tab=admin">Личный кабинет</a></div></div><div className="nfc-shell nfc-footer-bottom"><span>© {new Date().getFullYear()} Saayt.link</span><span>Сделано для новых возможностей ✳</span></div></footer>
+  <footer className="nfc-footer"><div className="nfc-shell nfc-footer-top"><div><a className="nfc-logo" href="#top">saayt<span>.</span>link</a><p>Умные решения для современного бизнеса.<br/>NFC • QR • Цифровые страницы</p></div><div className="nfc-footer-links"><a href="#products">Продукты</a><a href="#how">Как это работает</a><a href="#works">Наши работы</a><a href="#faq">FAQ</a></div><div className="nfc-footer-links"><a href="/templates">Шаблоны</a><a href="/studio">Конструктор</a><a href="/studio">Личный кабинет</a></div></div><div className="nfc-shell nfc-footer-bottom"><span>© {new Date().getFullYear()} Saayt.link</span><span>Сделано для новых возможностей ✳</span></div></footer>
  </div>
 }
