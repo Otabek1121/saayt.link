@@ -12,7 +12,7 @@
   "d1_databases": [{
     "binding": "DB",
     "database_name": "saayt-link-db",
-    "database_id": "00000000-0000-4000-8000-000000000000",
+    "database_id": "a959d790-3e13-449d-9665-80c64cac84e4",
     "migrations_dir": "drizzle"
   }],
   "r2_buckets": [{"binding":"BUCKET","bucket_name":"saayt-link-media"}]
