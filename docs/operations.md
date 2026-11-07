@@ -44,3 +44,9 @@ pnpm run build:cloudflare
 ```
 
 Then review mobile/desktop home, template preview, empty/authenticated cabinet, draft autosave, separate publication, scoped client login, photo upload, real Telegram test and delivery status. Counts in the sales dashboard are aggregate actions, not unique visitors or audited conversion rates. Prices, client testimonials and real case studies must be supplied by the business; never invent them.
+
+## Public interface languages
+
+The homepage, catalogue, quote form, demo and public legal pages support `uz`, `kk`, `ru`, `en`, `tg`. A validated `?lang=` parameter overrides the `saayt-language` preference cookie. Native labels are used in the selector. The choice also persists locally when storage is available. Metadata, canonical URLs, hreflang alternatives and the marketing sitemap use the selected language.
+
+The interface selector is separate from the new website language selector. Template previews retain all six existing content languages, including Kyrgyz. A manually chosen target language is not overwritten by an interface change. No existing customer texts, prices, photos or published snapshots are automatically translated or rewritten.

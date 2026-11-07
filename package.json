@@ -16,7 +16,7 @@
     "build:cloudflare": "node scripts/restore-export-assets.mjs && vite build --config vite.cloudflare.config.ts",
     "deploy:cloudflare": "node scripts/check-cloudflare-config.mjs && wrangler deploy --config dist/server/wrangler.json",
     "db:migrate:cloudflare": "wrangler d1 migrations apply saayt-link-db --remote --config wrangler.jsonc",
-    "test": "node scripts/restore-export-assets.mjs && node tests/backend.mjs && node tests/cloudflare-auth.mjs && node tests/editor-state.mjs"
+    "test": "node scripts/restore-export-assets.mjs && node tests/backend.mjs && node tests/cloudflare-auth.mjs && node tests/editor-state.mjs && node tests/public-i18n.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

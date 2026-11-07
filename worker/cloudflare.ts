@@ -1,3 +1,4 @@
+import {publicLanguage} from '../lib/public-i18n';
 import {backupTick} from '../lib/backup';
 import handler from 'vinext/server/fetch-handler';
 import {flushNotifications,telegramWebhook} from '../lib/telegram-notifications';
@@ -6,7 +7,7 @@ import {handleAuth} from '../lib/cloudflare-auth';
 export default {
   async fetch(request:Request, env:Cloudflare.Env, ctx:ExecutionContext) {
     // Never let clients inject the identity headers trusted by the former host.
-    const headers=new Headers(request.headers);
+    const headers=new Headers(request.headers);headers.delete('x-saayt-public-language');const requestedUrl=new URL(request.url);if(['/','/templates','/privacy','/terms'].includes(requestedUrl.pathname)){const cookie=request.headers.get('cookie')?.split(';').map(c=>c.trim()).find(c=>c.startsWith('saayt-language='))?.slice('saayt-language='.length);headers.set('x-saayt-public-language',publicLanguage(requestedUrl.searchParams.get('lang'))||publicLanguage(cookie)||'ru')}
     for(const name of [...headers.keys()]) if(name.startsWith('oai-authenticated-user-')) headers.delete(name);
     const clean=new Request(request,{headers});
     const url=new URL(clean.url);

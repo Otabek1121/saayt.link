@@ -1,1 +1,3 @@
-import type {Metadata} from 'next';import CatalogBrowser from './catalog-browser';export const metadata:Metadata={title:'Каталог шаблонов — Saayt.link',description:'Собственные дизайны Saayt.link для ресторанов, магазинов и услуг. Полный просмотр, редактирование и публикация сайта.'};export default function Page(){return <CatalogBrowser catalogOnly/>}
+import CatalogBrowser from './catalog-browser';import {requestLanguage} from '../../lib/public-language-server';import {publicMetadata} from '../../lib/public-metadata';
+export async function generateMetadata({searchParams}:{searchParams:Promise<{lang?:string}>}){return publicMetadata(await requestLanguage((await searchParams).lang),'/templates',true)}
+export default async function Page({searchParams}:{searchParams:Promise<{lang?:string}>}){return <CatalogBrowser catalogOnly initialLanguage={await requestLanguage((await searchParams).lang)}/>}
