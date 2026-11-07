@@ -1,4 +1,4 @@
-export type SessionUser={userId:string;displayName:string;email:string;fullName:string|null};
+export type SessionUser={userId:string;displayName:string;email:string;fullName:string|null;clientProjectId?:string};
 const SESSION='__Host-saayt-session', FLOW='__Host-saayt-oauth';
 const encoder=new TextEncoder();
 const encode=(bytes:Uint8Array)=>Buffer.from(bytes).toString('base64url');
@@ -33,6 +33,11 @@ export async function unseal(value:string|null,secret:string):Promise<Record<str
 export async function readSession(headers:Headers,env:Cloudflare.Env):Promise<SessionUser|null>{
   if(env.AUTH_PROVIDER!=='google'||!env.SESSION_SECRET)return null;
   const data=await unseal(cookieValue(headers,SESSION),env.SESSION_SECRET);
+  if(data?.purpose==='client-session'&&typeof data.clientProjectId==='string'&&typeof data.revision==='number'&&env.DB){
+    const row=await env.DB.prepare('SELECT revision, enabled, display_name FROM client_credentials WHERE project_id = ?').bind(data.clientProjectId).first<{revision:number;enabled:number;display_name:string}>();
+    if(!row||!row.enabled||row.revision!==data.revision)return null;
+    return {userId:'client:'+data.clientProjectId,email:'',displayName:row.display_name||'Клиент',fullName:null,clientProjectId:data.clientProjectId};
+  }
   if(data?.purpose!=='session'||typeof data.userId!=='string'||typeof data.email!=='string'||typeof data.displayName!=='string')return null;
   return {userId:data.userId,email:data.email,displayName:data.displayName,fullName:typeof data.fullName==='string'?data.fullName:null};
 }

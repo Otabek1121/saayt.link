@@ -10,6 +10,7 @@ export const normalizedEmail=(email:string)=>email.trim().toLowerCase();
 export function membershipIdentity(user:ChatGPTUser){return or(eq(studioMembers.userId,user.userId),and(isNull(studioMembers.userId),eq(studioMembers.email,normalizedEmail(user.email))))}
 export async function getWorkspaceUser():Promise<WorkspaceUser|null>{
  const user=await getChatGPTUser();if(!user)return null;
+ if(user.clientProjectId){const [p]=await getDb().select().from(projects).where(eq(projects.id,user.clientProjectId));return p&&!p.archived?{...user,ownerId:p.owner,projectId:p.id,role:'client'}:null}
  const h=await headers();const scope=h.get('cookie')?.split(';').map(x=>x.trim()).find(x=>x.startsWith(CLIENT_SITE_COOKIE+'='))?.slice(CLIENT_SITE_COOKIE.length+1);
  if(scope){const [p]=await getDb().select().from(projects).where(eq(projects.id,scope));if(!p||p.archived)return null;const [grant]=await getDb().select().from(projectClients).where(and(eq(projectClients.projectId,p.id),eq(projectClients.email,normalizedEmail(user.email))));if(!grant)return null;return {...user,ownerId:p.owner,role:'client',projectId:p.id}}
  const raw=h.get('cookie')?.split(';').map(x=>x.trim()).find(x=>x.startsWith(WORKSPACE_COOKIE+'='))?.slice(WORKSPACE_COOKIE.length+1);let ownerId=user.userId;

@@ -3,6 +3,7 @@ const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!isNaN(Date.parse(v
 const base={requestKey:z.string().uuid(),visitorId:z.string().uuid(),website:z.string().max(0).default('')};
 export const GuestSubmission=z.discriminatedUnion('kind',[
  z.object({...base,kind:z.literal('booking'),name:z.string().trim().min(2).max(100),phone:z.string().trim().max(40).regex(/^[+0-9 ()-]+$/).refine(v=>v.replace(/\D/g,'').length>=7),checkin:date,checkout:date,guests:z.number().int().min(1).max(50),roomId:z.string().max(64).default(''),note:z.string().trim().max(1000).default(''),consent:z.literal(true)}),
+ z.object({...base,kind:z.literal('request'),requestType:z.enum(['order','reservation','appointment']),name:z.string().trim().min(2).max(100),phone:z.string().trim().max(40).regex(/^[+0-9 ()-]+$/).refine(v=>v.replace(/\D/g,'').length>=7),itemId:z.string().max(64).default(''),quantity:z.number().int().min(1).max(50).default(1),date:date.optional(),time:z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(),note:z.string().trim().max(1000).default(''),consent:z.literal(true)}),
  z.object({...base,kind:z.literal('review'),name:z.string().trim().min(2).max(100),rating:z.number().int().min(1).max(5),body:z.string().trim().min(10).max(2000)})
 ]);
 export function validStay(checkin:string,checkout:string){const today=new Date().toISOString().slice(0,10);const nights=(Date.parse(checkout)-Date.parse(checkin))/86400000;return checkin>=today&&nights>=1&&nights<=90&&Date.parse(checkin)<Date.now()+730*86400000}

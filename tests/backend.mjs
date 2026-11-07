@@ -9,8 +9,9 @@ sql.exec(readFileSync(new URL('../drizzle/0002_white_firebird.sql',import.meta.u
 sql.exec(readFileSync(new URL('../drizzle/0003_lucky_guardsmen.sql',import.meta.url),'utf8'));
 sql.exec(readFileSync(new URL('../drizzle/0004_absent_doomsday.sql',import.meta.url),'utf8'));
 sql.exec(readFileSync(new URL('../drizzle/0006_project_clients.sql',import.meta.url),'utf8'));
-function statement(query,params=[]){return {bind(...p){return statement(query,p)},async run(){const out=sql.prepare(query).run(...params);return {success:true,results:[],meta:{changes:Number(out.changes)}}},async all(){return {success:true,results:sql.prepare(query).all(...params),meta:{}}},async raw(){const stmt=sql.prepare(query);stmt.setReturnArrays(true);return stmt.all(...params)}}}
-const objects=new Map();globalThis.__testEnv={DB:{prepare:statement},BUCKET:{async put(key,bytes,options){objects.set(key,{bytes,options})},async get(key){const value=objects.get(key);return value?{body:value.bytes}:null},async delete(key){objects.delete(key)}}};globalThis.__identity=new Headers();
+sql.exec(readFileSync(new URL('../drizzle/0007_client_password_telegram.sql',import.meta.url),'utf8'));
+function statement(query,params=[]){return {bind(...p){return statement(query,p)},async first(){const result=await this.all();return result.results[0]||null},async run(){const out=sql.prepare(query).run(...params);return {success:true,results:[],meta:{changes:Number(out.changes)}}},async all(){return {success:true,results:sql.prepare(query).all(...params),meta:{}}},async raw(){const stmt=sql.prepare(query);stmt.setReturnArrays(true);return stmt.all(...params)}}}
+const objects=new Map();globalThis.__testEnv={DB:{prepare:statement,async batch(stmts){sql.exec('BEGIN');try{const results=[];for(const s of stmts)results.push(await s.all());sql.exec('COMMIT');return results}catch(e){sql.exec('ROLLBACK');throw e}}},BUCKET:{async put(key,bytes,options){objects.set(key,{bytes,options})},async get(key){const value=objects.get(key);return value?{body:value.bytes}:null},async delete(key){objects.delete(key)}}};globalThis.__identity=new Headers();
 registerHooks({resolve(specifier,context,next){if(specifier==='cloudflare:workers')return {url:'data:text/javascript,export const env=globalThis.__testEnv',shortCircuit:true};if(specifier==='next/headers')return {url:'data:text/javascript,export async function headers(){return globalThis.__identity}',shortCircuit:true};if(specifier==='next/navigation')return {url:'data:text/javascript,export function redirect(url){throw Error(url)}',shortCircuit:true};if(specifier.startsWith('.')&&context.parentURL?.startsWith('file:')){const base=new URL(specifier,context.parentURL);for(const suffix of ['.ts','/index.ts']){const url=base.href+suffix;if(existsSync(fileURLToPath(url)))return next(url,context)}}return next(specifier,context)}});
 const project=await import('../app/api/projects/route.ts');const media=await import('../app/api/media/route.ts');const mediaFile=await import('../app/api/media/[id]/route.ts');const {generate,normalizeSpec,SiteSpec}=await import('../lib/spec.ts');const {businessProfiles}=await import('../lib/business-profiles.ts');const {presets}=await import('../lib/niches.ts');
 function identity(name,workspace){globalThis.__identity=name?new Headers({'oai-authenticated-user-id':name,'oai-authenticated-user-email':name+'@example.test',...(workspace?{cookie:'saayt-workspace='+encodeURIComponent(workspace)}:{})}):new Headers()}
@@ -197,7 +198,52 @@ await status(await project.POST(json({id:assigned.id,revision:1,spec:clientSpec,
 assert.equal(JSON.parse(sql.prepare('SELECT published FROM projects WHERE id=?').get(assigned.id).published).items[0].title,'Client changed dish');
 identity('owner-a');await status(await clientsApi.POST(json({email:'client-qa@example.test',action:'revoke'}),clientParams),200);
 clientIdentity();await status(await project.GET(),401);await status(await media.GET(),401);
-identity(null);const unauth=await manageApi.GET(new Request('https://unit.test/s/client-access-qa/manage'),{params:Promise.resolve({slug:'client-access-qa'})});assert.equal(unauth.status,302);assert.match(unauth.headers.get('location'),/signin-with-chatgpt/);
+identity(null);const unauth=await manageApi.GET(new Request('https://unit.test/s/client-access-qa/manage'),{params:Promise.resolve({slug:'client-access-qa'})});assert.equal(unauth.status,302);assert.match(unauth.headers.get('location'),/\/login/);
 console.log('PASS: per-site email grants, public login entry, single-project isolation, no client self-grants or copies, private media isolation, scoped uploads, client editing/publication and immediate revocation.');
 
+
+// Password credentials are owner-managed and grant access to one project only.
+const accounts=await import('../app/api/projects/[id]/client-account/route.ts');
+const passwords=await import('../app/api/client-login/[slug]/route.ts');
+const {hashPassword,verifyPassword,tokenHash}=await import('../lib/client-password.ts');
+const {readSession}=await import('../lib/cloudflare-auth.ts');
+const credentials={action:'save',login:'client-phone',name:'Client QA',password:'random-secure-123456',telegram:'client_qa'};
+identity('owner-a');await status(await accounts.POST(json(credentials),clientParams),200);
+const settings=await status(await accounts.GET(new Request('http://unit.test'),clientParams),200);assert.equal(settings.account.login,'client-phone');assert(!JSON.stringify(settings).includes('password_hash'));assert(!JSON.stringify(settings).includes(credentials.password));
+identity('owner-b');await status(await accounts.POST(json(credentials),clientParams),403);
+assert(await verifyPassword(credentials.password,await hashPassword(credentials.password)));assert(!await verifyPassword('wrong-password-123',await hashPassword(credentials.password)));
+const authEnv=globalThis.__testEnv;authEnv.SESSION_SECRET='test-only-long-secret-for-client-passwords';authEnv.AUTH_PROVIDER='google';
+const loginReq=(password=credentials.password,origin='https://unit.test',ip='203.0.113.10')=>new Request('https://unit.test/api/client-login/client-access-qa',{method:'POST',headers:{'Content-Type':'application/json',origin,'cf-connecting-ip':ip},body:JSON.stringify({login:credentials.login,password})});
+const loginParams={params:Promise.resolve({slug:'client-access-qa'})};
+await status(await passwords.POST(loginReq('wrong-password-123'),loginParams),401);
+await status(await passwords.POST(loginReq(credentials.password,'https://evil.test'),loginParams),403);
+const logged=await passwords.POST(loginReq(),loginParams);await status(logged,200);const clientCookie=logged.headers.getSetCookie().find(x=>x.startsWith('__Host-saayt-session=')).split(';')[0];assert.match(clientCookie,/^__Host-saayt-session=/);
+const clientUser=await readSession(new Headers({cookie:clientCookie}),authEnv);assert.equal(clientUser.clientProjectId,assigned.id);assert.equal(clientUser.email,'');
+globalThis.__identity=new Headers({cookie:clientCookie});const passwordProjects=await status(await project.GET(),200);assert.equal(passwordProjects.length,1);assert.equal(passwordProjects[0].id,assigned.id);await status(await accounts.GET(new Request('http://unit.test'),clientParams),403);await status(await project.POST(json({id:clientOther.id,revision:1,spec:clientSpec})),403);
+for(let n=0;n<11;n++){const response=await passwords.POST(loginReq('wrong-password-123','https://unit.test','203.0.113.11'),loginParams);assert.equal(response.status,n<10?401:429)}
+authEnv.AUTH_PROVIDER=undefined;identity('owner-a');await status(await accounts.POST(json({...credentials,password:'new-secure-password-987'}),clientParams),200);authEnv.AUTH_PROVIDER='google';assert.equal(await readSession(new Headers({cookie:clientCookie}),authEnv),null);authEnv.AUTH_PROVIDER=undefined;
+console.log('PASS: owner-only password setup, hashed passwords, scoped login, forged origin rejection, throttling, no secret exposure and password reset invalidating sessions.');
+// New public orders are stored with an outbox event atomically, with server item snapshots.
+identity(null);
+const orderBody={kind:'request',requestType:'order',requestKey:crypto.randomUUID(),visitorId:crypto.randomUUID(),name:'Guest QA',phone:'+998 90 111 22 33',itemId:clientSpec.items[0].id,quantity:2,note:'No salt',consent:true};
+const orderRequest=()=>new Request('https://unit.test/api/public-sites/client-access-qa/guest',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://unit.test'},body:JSON.stringify(orderBody)});
+await status(await guestPost('client-access-qa',{...orderBody,itemId:'unknown',requestKey:crypto.randomUUID()}),409);
+await status(await guestPost('client-access-qa',{...orderBody,requestType:'reservation',requestKey:crypto.randomUUID()}),400);
+const orderResponse=await status(await guest.POST(orderRequest(),{params:Promise.resolve({slug:'client-access-qa'})}),201);
+assert.equal(sql.prepare('SELECT count(*) n FROM notification_outbox WHERE event_id=?').get(orderResponse.id).n,1);
+const duplicateOrder=await status(await guest.POST(orderRequest(),{params:Promise.resolve({slug:'client-access-qa'})}),200);assert(duplicateOrder.duplicate);assert.equal(sql.prepare('SELECT count(*) n FROM notification_outbox WHERE event_id=?').get(orderResponse.id).n,1);
+const {telegramWebhook,flushNotifications}=await import('../lib/telegram-notifications.ts');
+const savedFetch=globalThis.fetch;const sentMessages=[];globalThis.fetch=async (url,options)=>{assert(url.startsWith('https://api.telegram.org/bot'));if(url.endsWith('/getMe'))return Response.json({ok:true,result:{username:'test_bot'}});if(url.endsWith('/getWebhookInfo'))return Response.json({ok:true,result:{url:''}});if(url.endsWith('/setWebhook')){assert.equal(JSON.parse(options.body).secret_token,authEnv.TELEGRAM_WEBHOOK_SECRET);return Response.json({ok:true,result:true})}sentMessages.push(JSON.parse(options.body));return Response.json({ok:true,result:{message_id:1}})};
+authEnv.TELEGRAM_BOT_TOKEN='test-only-token';authEnv.TELEGRAM_WEBHOOK_SECRET='test-only-webhook-secret';authEnv.TELEGRAM_BOT_USERNAME='test_bot';
+identity('owner-a');const connect=await status(await accounts.POST(json({action:'connect'}),clientParams),200);const token=new URL(connect.link).searchParams.get('start');
+const webhook=(username='client_qa',secret=authEnv.TELEGRAM_WEBHOOK_SECRET)=>new Request('https://unit.test/api/telegram/webhook',{method:'POST',headers:{'Content-Type':'application/json','x-telegram-bot-api-secret-token':secret},body:JSON.stringify({message:{text:'/start '+token,chat:{id:987654321,type:'private'},from:{id:987654321,username}}})});
+assert.equal((await telegramWebhook(webhook('client_qa','forged'),authEnv)).status,403);
+await telegramWebhook(webhook('wrong_user'),authEnv);assert.equal(sql.prepare('SELECT telegram_chat_id FROM client_credentials WHERE project_id=?').get(assigned.id).telegram_chat_id,null);
+await telegramWebhook(webhook(),authEnv);assert.equal(sql.prepare('SELECT telegram_chat_id FROM client_credentials WHERE project_id=?').get(assigned.id).telegram_chat_id,'987654321');assert.equal(sql.prepare('SELECT connect_hash FROM client_credentials WHERE project_id=?').get(assigned.id).connect_hash,null);
+await telegramWebhook(webhook(),authEnv);assert.equal(sql.prepare('SELECT connect_hash FROM client_credentials WHERE project_id=?').get(assigned.id).connect_hash,null);
+await flushNotifications(authEnv);assert.equal(sql.prepare('SELECT status FROM notification_outbox WHERE event_id=?').get(orderResponse.id).status,'sent');assert(sentMessages.some(x=>x.text.includes('Заказ блюда')&&x.text.includes('Client changed dish')));const sentBefore=sentMessages.length;await flushNotifications(authEnv);assert.equal(sentMessages.length,sentBefore);
+// Delivery failure retains a retryable event instead of losing the saved request.
+sql.prepare("UPDATE notification_outbox SET status='pending',next_attempt=0 WHERE event_id=?").run(orderResponse.id);globalThis.fetch=async()=>Response.json({ok:false,parameters:{retry_after:120}},{status:429});await flushNotifications(authEnv);const retry=sql.prepare('SELECT status,next_attempt FROM notification_outbox WHERE event_id=?').get(orderResponse.id);assert.equal(retry.status,'pending');assert(retry.next_attempt>Date.now()/1000);
+globalThis.fetch=savedFetch;delete authEnv.TELEGRAM_BOT_TOKEN;delete authEnv.TELEGRAM_WEBHOOK_SECRET;
+console.log('PASS: atomic request/outbox save, duplicate suppression, verified Telegram binding, webhook secret, one-time token, correct recipient, successful delivery and retry after rate limit.');
 sql.close();

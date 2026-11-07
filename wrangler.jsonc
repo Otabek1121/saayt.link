@@ -24,5 +24,10 @@
       "binding": "BUCKET",
       "bucket_name": "saayt-link-media"
     }
-  ]
+  ],
+  "triggers": {
+    "crons": [
+      "*/1 * * * *"
+    ]
+  }
 }

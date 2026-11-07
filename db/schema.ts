@@ -14,3 +14,7 @@ export const studioMembers=sqliteTable('studio_members',{
 export const projectClients=sqliteTable('project_clients',{
  projectId:text('project_id').notNull().references(()=>projects.id),email:text('email').notNull(),created:text('created').notNull()
 },t=>[uniqueIndex('project_client_email').on(t.projectId,t.email)]);
+
+export const notificationOutbox=sqliteTable('notification_outbox',{
+ eventId:text('event_id').primaryKey().references(()=>guestEntries.id),projectId:text('project_id').notNull().references(()=>projects.id),status:text('status').notNull().default('pending'),attempts:integer('attempts').notNull().default(0),nextAttempt:integer('next_attempt').notNull().default(0),lastError:text('last_error').notNull().default('')
+});
