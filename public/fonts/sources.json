@@ -1,0 +1,17 @@
+{
+  "Manrope": {
+    "source": "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap",
+    "license": "SIL Open Font License 1.1",
+    "files": 4
+  },
+  "Geist": {
+    "source": "https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap",
+    "license": "SIL Open Font License 1.1",
+    "files": 4
+  },
+  "Poppins": {
+    "source": "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap",
+    "license": "SIL Open Font License 1.1",
+    "files": 4
+  }
+}

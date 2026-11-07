@@ -1,0 +1,2 @@
+import {findPublicSite} from '../../../../lib/public-site';
+export async function GET(_req:Request,{params}:{params:Promise<{slug:string}>}){const {slug}=await params;const site=await findPublicSite(slug);if(!site)return Response.json({error:'Сайт не опубликован или не найден'},{status:404,headers:{'Cache-Control':'no-store'}});return Response.json({slug,spec:site.spec},{headers:{'Cache-Control':'no-store'}})}

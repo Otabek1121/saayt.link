@@ -1,0 +1,2 @@
+import {serverOrigin} from '../../lib/server-origin';
+export function GET(){return new Response(`User-agent: *\nAllow: /s/\nAllow: /images/\nAllow: /api/public-sites/\nDisallow: /api/\nDisallow: /site/\nDisallow: /signin-with-chatgpt\nDisallow: /signout-with-chatgpt\nSitemap: ${serverOrigin()}/sitemap.xml\n`,{headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'public, max-age=300'}})}

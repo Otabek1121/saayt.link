@@ -1,0 +1,1 @@
+import {getChatGPTUser} from '../../chatgpt-auth';export async function GET(){const u=await getChatGPTUser();return Response.json(u?{signedIn:true,name:u.displayName}:{signedIn:false},{headers:{'Cache-Control':'no-store'}})}

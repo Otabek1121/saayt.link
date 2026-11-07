@@ -1,0 +1,1 @@
+import type {z} from 'zod';import type {CSSProperties} from 'react';import type {ImageRef} from './spec';export type Photo=z.infer<typeof ImageRef>;export function photoStyle(p:Photo):CSSProperties{return {objectFit:p.fit,objectPosition:`${p.x}% ${p.y}%`}}

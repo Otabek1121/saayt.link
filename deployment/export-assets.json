@@ -1,0 +1,247 @@
+[
+  {
+    "path": "public/fonts/geist-0.ttf",
+    "sha256": "ccce59465ae5c61930ada5453834f60500fbd95084d85db63e0e65fad0125455",
+    "url": "https://saayt.link/fonts/geist-0.ttf"
+  },
+  {
+    "path": "public/fonts/geist-1.ttf",
+    "sha256": "a8eefb873ba9c9020665f8a98302697ce1f3b79ab2deef6ee508c0ca6a82e876",
+    "url": "https://saayt.link/fonts/geist-1.ttf"
+  },
+  {
+    "path": "public/fonts/geist-2.ttf",
+    "sha256": "7171f481b121803d007f5c6c76cd9988c0d41cce4202db9a18dff9945505d36d",
+    "url": "https://saayt.link/fonts/geist-2.ttf"
+  },
+  {
+    "path": "public/fonts/geist-3.ttf",
+    "sha256": "1a9874b3be0fc168692a3d2327bccb4d28835653d3b91537a755296a467a83e3",
+    "url": "https://saayt.link/fonts/geist-3.ttf"
+  },
+  {
+    "path": "public/fonts/manrope-0.ttf",
+    "sha256": "ed335894f8d954263675f7e457bf657374d8b7be629be4dc43aef97c309ad3ae",
+    "url": "https://saayt.link/fonts/manrope-0.ttf"
+  },
+  {
+    "path": "public/fonts/manrope-1.ttf",
+    "sha256": "437dc9f921739a6893128fa4dfc299424951148475815a9a213a46457878c42b",
+    "url": "https://saayt.link/fonts/manrope-1.ttf"
+  },
+  {
+    "path": "public/fonts/manrope-2.ttf",
+    "sha256": "68ed4be49ec7d32f07b42f9232dc01ca1df7a77be1d9b0731aac74db58235f34",
+    "url": "https://saayt.link/fonts/manrope-2.ttf"
+  },
+  {
+    "path": "public/fonts/manrope-3.ttf",
+    "sha256": "ea1f264039fed13fd36e6d6f49fcae4fe7007def02cf2972b5c7f6d6f1349d06",
+    "url": "https://saayt.link/fonts/manrope-3.ttf"
+  },
+  {
+    "path": "public/fonts/poppins-0.ttf",
+    "sha256": "cdedb1729acac414ed01744a11da7badb86adf13108e7bd3fa161b9323f7fe54",
+    "url": "https://saayt.link/fonts/poppins-0.ttf"
+  },
+  {
+    "path": "public/fonts/poppins-1.ttf",
+    "sha256": "fcff04f4bec2b3636f05ed894dc1f9a752c4cb587ee49857ec7a82abaf6ca016",
+    "url": "https://saayt.link/fonts/poppins-1.ttf"
+  },
+  {
+    "path": "public/fonts/poppins-2.ttf",
+    "sha256": "dae40ca7b35fe7501bda2e4140a6860b1db47330be5d3c8ab6971fd83a70e9a5",
+    "url": "https://saayt.link/fonts/poppins-2.ttf"
+  },
+  {
+    "path": "public/fonts/poppins-3.ttf",
+    "sha256": "1984efdda0fbe207d7ac20feac2ba7c2768c92a90094b02a206c9d58cc30ff2e",
+    "url": "https://saayt.link/fonts/poppins-3.ttf"
+  },
+  {
+    "path": "public/images/accounting.webp",
+    "sha256": "b391fb88787067f4007426b5b10b931ebb0a0841c9e641c458ed75c67e0e74ea",
+    "url": "https://saayt.link/images/accounting.webp"
+  },
+  {
+    "path": "public/images/auto.webp",
+    "sha256": "228ac7ff927e214105bfadc7307740982f6558ccab658d5eeb8f0bf221a3f021",
+    "url": "https://saayt.link/images/auto.webp"
+  },
+  {
+    "path": "public/images/beauty.webp",
+    "sha256": "9145f41cb43800fbdf97196a7a01633d68cc076cd5183a4542c2ddde81f32fe1",
+    "url": "https://saayt.link/images/beauty.webp"
+  },
+  {
+    "path": "public/images/burger.webp",
+    "sha256": "ecdc65ba86734c87b0a9a5e6e2968d1d03966f25f8909d42926737f07c9dd7d7",
+    "url": "https://saayt.link/images/burger.webp"
+  },
+  {
+    "path": "public/images/cleaning.webp",
+    "sha256": "1f42869a191313e5b737a72ade224ffb7b29d389d01d5f32fa7902cda0d1a3ce",
+    "url": "https://saayt.link/images/cleaning.webp"
+  },
+  {
+    "path": "public/images/construction.webp",
+    "sha256": "0afe3057d06c9df294c8e10fa2bd8901513a3b0d4a4e4f042fbad3d3b638e348",
+    "url": "https://saayt.link/images/construction.webp"
+  },
+  {
+    "path": "public/images/dastarkhan.webp",
+    "sha256": "5eaf0fde25ff8b3df6d009cb693bb9aa4984c3a404a77f5dfd6a05a04c5b352f",
+    "url": "https://saayt.link/images/dastarkhan.webp"
+  },
+  {
+    "path": "public/images/dentistry.webp",
+    "sha256": "920cbce0761c455f6d124c074758848c9d0ac23dc807f76da416311e6d8cb333",
+    "url": "https://saayt.link/images/dentistry.webp"
+  },
+  {
+    "path": "public/images/dish.webp",
+    "sha256": "09e6a6a0f551ebdd0105b0c27c1faab4656de11f6b3a11158b9848863ee3468d",
+    "url": "https://saayt.link/images/dish.webp"
+  },
+  {
+    "path": "public/images/fitness.webp",
+    "sha256": "4d5b135ae639ac73253b7e2aada061571b9706ec5e3876d2f420434919e19020",
+    "url": "https://saayt.link/images/fitness.webp"
+  },
+  {
+    "path": "public/images/fries.webp",
+    "sha256": "e1164f5ce7f45685fc4f51bddc98495d30a4caf43039affffc6692654adc8b24",
+    "url": "https://saayt.link/images/fries.webp"
+  },
+  {
+    "path": "public/images/furniture.webp",
+    "sha256": "1190a862ba828da0dedda685b86b17236c990deee50c4ea514d3b5cdbea85327",
+    "url": "https://saayt.link/images/furniture.webp"
+  },
+  {
+    "path": "public/images/generic.webp",
+    "sha256": "8732250bb60377a0130e3ade461670bb4b4a0205c21b659bbd9b596e4e68ce22",
+    "url": "https://saayt.link/images/generic.webp"
+  },
+  {
+    "path": "public/images/grill.webp",
+    "sha256": "c91cc1336116382107a37b9cfd8a623c5b9e5af12cc60c78f0f804d77fcacdc8",
+    "url": "https://saayt.link/images/grill.webp"
+  },
+  {
+    "path": "public/images/hostel-lounge.webp",
+    "sha256": "d895c631a563ffc3100b899c467d517467ec68a45a3c4f69a160d1de333cdf9c",
+    "url": "https://saayt.link/images/hostel-lounge.webp"
+  },
+  {
+    "path": "public/images/hostel-private.webp",
+    "sha256": "64306f287da41c6536ce0c89daeb35e6ef164f2c5ab2742db30b970274d5e54f",
+    "url": "https://saayt.link/images/hostel-private.webp"
+  },
+  {
+    "path": "public/images/hostel-room.webp",
+    "sha256": "6aa4f2eacac517762dc9caa12f47510d05e4269ef42344e11a7c70a58f3a8da0",
+    "url": "https://saayt.link/images/hostel-room.webp"
+  },
+  {
+    "path": "public/images/hostel.webp",
+    "sha256": "6ea90078756cd8f303611269fce48db524c40ae1e099ead576fde5b6f1802a7d",
+    "url": "https://saayt.link/images/hostel.webp"
+  },
+  {
+    "path": "public/images/it.webp",
+    "sha256": "3be9460f20fb28e215344f7ba619f960e3d5af3f15e93c870f3bb6b103980d0b",
+    "url": "https://saayt.link/images/it.webp"
+  },
+  {
+    "path": "public/images/kindergarten.webp",
+    "sha256": "d3f3bd7f45c8a563134fd3e42e9c5f09943e92ce0078e27521fd25d7b727ed20",
+    "url": "https://saayt.link/images/kindergarten.webp"
+  },
+  {
+    "path": "public/images/legal.webp",
+    "sha256": "cf5f4a78a01ba96af92fba66acc196a4162fa754e0c3d0e68505e70243c01a9f",
+    "url": "https://saayt.link/images/legal.webp"
+  },
+  {
+    "path": "public/images/logistics.webp",
+    "sha256": "b61f2937342c37b663e7680df8cff7ec1440a8384f4388af02a0c0a2f23ab179",
+    "url": "https://saayt.link/images/logistics.webp"
+  },
+  {
+    "path": "public/images/medical.webp",
+    "sha256": "9f88098499a101df199ccc89dadc4acbbb30c4c255494c8345493efe2ec2b049",
+    "url": "https://saayt.link/images/medical.webp"
+  },
+  {
+    "path": "public/images/nails.webp",
+    "sha256": "d91482dff9907821b11c44c26202f602dd2ce1a9ab8a0120a9ab7d17c572ba67",
+    "url": "https://saayt.link/images/nails.webp"
+  },
+  {
+    "path": "public/images/photography.webp",
+    "sha256": "c0f33b0ee722f175780a38e931415ae97e68d8ba1f4d2d8bfa0fa149b1d49085",
+    "url": "https://saayt.link/images/photography.webp"
+  },
+  {
+    "path": "public/images/pizza.webp",
+    "sha256": "8be85089629e6f1427f4d6399dc713ab08f8b66eb494a033b28877216e283efb",
+    "url": "https://saayt.link/images/pizza.webp"
+  },
+  {
+    "path": "public/images/plov.webp",
+    "sha256": "857fec6c4ce3e7b6913b2ef19f51746badf7394c27f22341cb460020e667b89d",
+    "url": "https://saayt.link/images/plov.webp"
+  },
+  {
+    "path": "public/images/plumbing.webp",
+    "sha256": "23a20778adf79d6700f7e5116b23cc610f111ad198c15f2e78d9312c909525bc",
+    "url": "https://saayt.link/images/plumbing.webp"
+  },
+  {
+    "path": "public/images/realestate.webp",
+    "sha256": "fecb5404f38f27a8c22c87ca01a4fb1e20d4ae41717431255fef7c7bcfcacab2",
+    "url": "https://saayt.link/images/realestate.webp"
+  },
+  {
+    "path": "public/images/repair.webp",
+    "sha256": "2575018e0a2f266abae7400509b5f2f6b273e6d4ed88869d76603eb248b3d0c8",
+    "url": "https://saayt.link/images/repair.webp"
+  },
+  {
+    "path": "public/images/restaurant.webp",
+    "sha256": "7ab741b7a11ee7f37d319e94dda68d0b6a31399edf4af3dcd099357e23809ea6",
+    "url": "https://saayt.link/images/restaurant.webp"
+  },
+  {
+    "path": "public/images/retail.webp",
+    "sha256": "6bea37ccb33ac7438c8adf80e0ef86473b93bc2b666688625439dd966b9c340f",
+    "url": "https://saayt.link/images/retail.webp"
+  },
+  {
+    "path": "public/images/school.webp",
+    "sha256": "1a17c576063b45dd12169425579bba2b1d9af3ba28a4eb7ec8cd65f4c8642e1b",
+    "url": "https://saayt.link/images/school.webp"
+  },
+  {
+    "path": "public/images/sushi-rolls.webp",
+    "sha256": "e7aa0260033b5ca214491a088228f765166e55f3bf76fba1fa1271ffa954a8d9",
+    "url": "https://saayt.link/images/sushi-rolls.webp"
+  },
+  {
+    "path": "public/images/sushi.webp",
+    "sha256": "4d33c87c7bce114ec42dc93b8a4beac5724ce29373c384f24ee8a81fdb14cd12",
+    "url": "https://saayt.link/images/sushi.webp"
+  },
+  {
+    "path": "public/images/travel.webp",
+    "sha256": "1869a362e5f4fffb23298dd5349a923b4d5ccb04d4d11e3b772822b6525e248c",
+    "url": "https://saayt.link/images/travel.webp"
+  },
+  {
+    "path": "public/images/wedding.webp",
+    "sha256": "6d95b5488b2f86faf6485a49d61fe33349a3829ddabbc29f834bedd2496563ca",
+    "url": "https://saayt.link/images/wedding.webp"
+  }
+]

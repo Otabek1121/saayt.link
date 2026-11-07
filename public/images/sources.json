@@ -1,0 +1,333 @@
+[
+  {
+    "key": "plumbing",
+    "path": "/images/plumbing.webp",
+    "source": "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 961
+  },
+  {
+    "key": "restaurant",
+    "path": "/images/restaurant.webp",
+    "source": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "wedding",
+    "path": "/images/wedding.webp",
+    "source": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "construction",
+    "path": "/images/construction.webp",
+    "source": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 810
+  },
+  {
+    "key": "retail",
+    "path": "/images/retail.webp",
+    "source": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 961
+  },
+  {
+    "key": "school",
+    "path": "/images/school.webp",
+    "source": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 1017
+  },
+  {
+    "key": "kindergarten",
+    "path": "/images/kindergarten.webp",
+    "source": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 2168
+  },
+  {
+    "key": "nails",
+    "path": "/images/nails.webp",
+    "source": "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 2160
+  },
+  {
+    "key": "legal",
+    "path": "/images/legal.webp",
+    "source": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "accounting",
+    "path": "/images/accounting.webp",
+    "source": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 961
+  },
+  {
+    "key": "beauty",
+    "path": "/images/beauty.webp",
+    "source": "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 1080
+  },
+  {
+    "key": "medical",
+    "path": "/images/medical.webp",
+    "source": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 980
+  },
+  {
+    "key": "dentistry",
+    "path": "/images/dentistry.webp",
+    "source": "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 1080
+  },
+  {
+    "key": "fitness",
+    "path": "/images/fitness.webp",
+    "source": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "realestate",
+    "path": "/images/realestate.webp",
+    "source": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 955
+  },
+  {
+    "key": "auto",
+    "path": "/images/auto.webp",
+    "source": "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 810
+  },
+  {
+    "key": "cleaning",
+    "path": "/images/cleaning.webp",
+    "source": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "it",
+    "path": "/images/it.webp",
+    "source": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 959
+  },
+  {
+    "key": "logistics",
+    "path": "/images/logistics.webp",
+    "source": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "travel",
+    "path": "/images/travel.webp",
+    "source": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 1138
+  },
+  {
+    "key": "photography",
+    "path": "/images/photography.webp",
+    "source": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 1800
+  },
+  {
+    "key": "furniture",
+    "path": "/images/furniture.webp",
+    "source": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "repair",
+    "path": "/images/repair.webp",
+    "source": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "generic",
+    "path": "/images/generic.webp",
+    "source": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photo; not the company premises, staff or products",
+    "width": 1440,
+    "height": 961
+  },
+  {
+    "key": "dish",
+    "path": "/images/dish.webp",
+    "source": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=85&fit=crop",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative salad photo for animated restaurant demo; not an actual menu item"
+  },
+  {
+    "key": "hostel",
+    "path": "/images/hostel.webp",
+    "source": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock image, not actual rooms or facilities of a listed business",
+    "width": 1440,
+    "height": 961
+  },
+  {
+    "key": "hostel-private",
+    "path": "/images/hostel-private.webp",
+    "source": "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock image, not actual rooms or facilities of a listed business",
+    "width": 1440,
+    "height": 1080
+  },
+  {
+    "key": "hostel-room",
+    "path": "/images/hostel-room.webp",
+    "source": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock image, not actual rooms or facilities of a listed business",
+    "width": 1440,
+    "height": 1080
+  },
+  {
+    "key": "hostel-lounge",
+    "path": "/images/hostel-lounge.webp",
+    "source": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock image, not actual rooms or facilities of a listed business",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "plov",
+    "path": "/images/plov.webp",
+    "source": "https://images.unsplash.com/photo-1671048116663-eda1518a169b?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 2160
+  },
+  {
+    "key": "burger",
+    "path": "/images/burger.webp",
+    "source": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 1196
+  },
+  {
+    "key": "fries",
+    "path": "/images/fries.webp",
+    "source": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 2160
+  },
+  {
+    "key": "pizza",
+    "path": "/images/pizza.webp",
+    "source": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "sushi",
+    "path": "/images/sushi.webp",
+    "source": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "key": "sushi-rolls",
+    "path": "/images/sushi-rolls.webp",
+    "source": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 2558
+  },
+  {
+    "key": "grill",
+    "path": "/images/grill.webp",
+    "source": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 961
+  },
+  {
+    "key": "dastarkhan",
+    "path": "/images/dastarkhan.webp",
+    "source": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1440&q=85",
+    "license": "https://unsplash.com/license",
+    "usage": "Illustrative stock photograph; replace with the restaurant’s own dishes before publication",
+    "width": 1440,
+    "height": 960
+  }
+]

@@ -1,0 +1,12 @@
+import {z} from 'zod';
+const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!isNaN(Date.parse(v))&&new Date(v+'T00:00:00Z').toISOString().slice(0,10)===v);
+const base={requestKey:z.string().uuid(),visitorId:z.string().uuid(),website:z.string().max(0).default('')};
+export const GuestSubmission=z.discriminatedUnion('kind',[
+ z.object({...base,kind:z.literal('booking'),name:z.string().trim().min(2).max(100),phone:z.string().trim().max(40).regex(/^[+0-9 ()-]+$/).refine(v=>v.replace(/\D/g,'').length>=7),checkin:date,checkout:date,guests:z.number().int().min(1).max(50),roomId:z.string().max(64).default(''),note:z.string().trim().max(1000).default(''),consent:z.literal(true)}),
+ z.object({...base,kind:z.literal('review'),name:z.string().trim().min(2).max(100),rating:z.number().int().min(1).max(5),body:z.string().trim().min(10).max(2000)})
+]);
+export function validStay(checkin:string,checkout:string){const today=new Date().toISOString().slice(0,10);const nights=(Date.parse(checkout)-Date.parse(checkin))/86400000;return checkin>=today&&nights>=1&&nights<=90&&Date.parse(checkin)<Date.now()+730*86400000}
+export const GuestEdit=z.object({id:z.string().uuid(),revision:z.number().int().positive(),status:z.enum(['pending','approved','hidden','new','contacted','confirmed','cancelled']),body:z.string().trim().min(10).max(2000).optional(),reply:z.string().trim().max(2000).optional()});
+export const publicReview=(entry:{id:string;payload:string;publicBody:string|null;reply:string;created:string})=>{const p=JSON.parse(entry.payload) as {name:string;rating:number;body:string};return {id:entry.id,name:p.name,rating:p.rating,body:entry.publicBody??p.body,reply:entry.reply,edited:entry.publicBody!==null&&entry.publicBody!==p.body,created:entry.created}};
+
+export async function readGuestText(req:Request){const reader=req.body?.getReader();if(!reader)return '';let size=0;const parts:Uint8Array[]=[];for(;;){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>12000){await reader.cancel();throw Error('guest-payload-too-large')}parts.push(value)}const bytes=new Uint8Array(size);let at=0;for(const p of parts){bytes.set(p,at);at+=p.length}return new TextDecoder().decode(bytes)}

@@ -1,0 +1,4 @@
+import type {Metadata} from 'next';import {notFound} from 'next/navigation';import SiteView from '../../site-view';import {findPublicSite} from '../../../lib/public-site';import {clientMetadata} from '../../../lib/site-metadata';import {serverOrigin} from '../../../lib/server-origin';
+export const dynamic='force-dynamic';
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const site=await findPublicSite(slug);if(!site)return {title:'Сайт не найден — Saayt.link',robots:{index:false,follow:false}};return clientMetadata(site.spec,slug,serverOrigin())}
+export default async function Page({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const site=await findPublicSite(slug);if(!site)notFound();return <main className="public-client-site" lang={site.spec.language}><SiteView spec={site.spec} publicMode publicSlug={slug}/></main>}

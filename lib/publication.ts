@@ -1,0 +1,13 @@
+import {normalizeSpec,type Spec} from './spec';import {businessProfiles,isCatalog,isMenu} from './business-profiles';
+import type {Photo} from './photo';
+export const PUBLIC_ORIGIN='https://forma-business-studio.theazik00.chatgpt.site';
+export const RESERVED_SLUGS=new Set(['admin','api','site','signin','signout','callback','support','templates','media','images','settings','account','login']);
+export function validSlug(slug:string){return /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])$/.test(slug)&&!slug.includes('--')&&!RESERVED_SLUGS.has(slug)}
+const letters:Record<string,string>={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',ч:'ch',ш:'sh',щ:'shch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya',ў:'o',қ:'q',ғ:'g',ҳ:'h'};
+export function suggestSlug(name:string){let s=[...name.toLowerCase()].map(c=>letters[c]??c).join('').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/['ʻʼ‘’`]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,63).replace(/-$/,'');if(s.length<2||RESERVED_SLUGS.has(s))s='site-'+(s||'business');return s}
+export const publicPath=(slug:string)=>'/s/'+slug;
+export function validatedOrigin(value?:string){if(!value)return PUBLIC_ORIGIN;try{const u=new URL(value);if(u.protocol==='https:'&&!u.username&&!u.password&&u.pathname==='/'&&!u.search&&!u.hash)return u.origin}catch{}return PUBLIC_ORIGIN}
+export const publicUrl=(slug:string,origin?:string)=>validatedOrigin(origin)+publicPath(slug);
+// Only fields actually enabled on the public page may be serialized or serve media.
+export function visibleSpec(raw:unknown):Spec{const s=normalizeSpec(raw);const details=Object.fromEntries(businessProfiles[s.niche].details.filter(d=>s.details[d.key]?.trim()).map(d=>[d.key,s.details[d.key]]));return {...s,nicheDescription:undefined,about:s.sections.about?s.about:'',aboutTitle:s.sections.about?s.aboutTitle:'',details,items:s.sections.items?s.items.map(item=>({...item,price:isCatalog(s.niche)||isMenu(s.niche)?item.price:undefined})):[],services:[],gallery:s.sections.gallery?s.gallery:[],team:s.sections.team?s.team:[],faq:s.sections.faq?s.faq.filter(f=>f.answer.trim()):[]}}
+export function publicSpec(raw:unknown,slug:string):Spec{const s=visibleSpec(raw);const map=(photo:Photo):Photo=>({...photo,src:photo.src.startsWith('/api/media/')?'/api/public-sites/'+slug+'/media/'+photo.src.split('/').pop():photo.src});return {...s,heroImage:s.heroImage?map(s.heroImage):null,logo:s.logo?map(s.logo):null,gallery:s.gallery.map(map),items:s.items.map(i=>({...i,images:i.images.map(map)})),team:s.team.map(t=>({...t,photo:t.photo?map(t.photo):null}))}}

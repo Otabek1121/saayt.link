@@ -1,0 +1,1 @@
+import type {Metadata} from 'next';import CatalogBrowser from './catalog-browser';export const metadata:Metadata={title:'Каталог шаблонов — Saayt.link',description:'Собственные дизайны Saayt.link для ресторанов, магазинов и услуг. Полный просмотр, редактирование и публикация сайта.'};export default function Page(){return <CatalogBrowser/>}
