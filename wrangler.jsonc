@@ -9,7 +9,8 @@
   "workers_dev": true,
   "vars": {
     "AUTH_PROVIDER": "google",
-    "PUBLIC_SITE_ORIGIN": "https://saayt-link.theazik00.workers.dev"
+    "PUBLIC_SITE_ORIGIN": "https://saayt.link",
+    "PREVIOUS_SITE_ORIGIN": "https://saayt-link.theazik00.workers.dev"
   },
   "d1_databases": [
     {
@@ -29,5 +30,11 @@
     "crons": [
       "*/1 * * * *"
     ]
-  }
+  },
+  "routes": [
+    {
+      "pattern": "saayt.link",
+      "custom_domain": true
+    }
+  ]
 }

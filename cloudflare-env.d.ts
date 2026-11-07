@@ -1,6 +1,7 @@
 declare namespace Cloudflare {
   interface Env {
     PUBLIC_SITE_ORIGIN?: string;
+    PREVIOUS_SITE_ORIGIN?: string;
     AUTH_PROVIDER?: string;
     SESSION_SECRET?: string;
     TELEGRAM_BOT_TOKEN?: string;

@@ -48,6 +48,6 @@ export async function ensureTelegramWebhook(env:Cloudflare.Env){
  const target=origin.origin+'/api/telegram/webhook';
  async function call(method:string,body:object){const r=await fetch('https://api.telegram.org/bot'+env.TELEGRAM_BOT_TOKEN+'/'+method,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(12000)});const d=await r.json() as {ok:boolean;result:unknown};if(!r.ok||!d.ok)throw Error('Telegram setup failed');return d.result}
  const bot=await call('getMe',{}) as {username?:string};if(bot.username?.toLowerCase()!==env.TELEGRAM_BOT_USERNAME.replace('@','').toLowerCase())throw Error('Bot username does not match token');
- const info=await call('getWebhookInfo',{}) as {url?:string};if(info.url&&info.url!==target)throw Error('Bot already belongs to another site');
+ const info=await call('getWebhookInfo',{}) as {url?:string};if(info.url&&info.url!==target&&info.url!==env.PREVIOUS_SITE_ORIGIN+'/api/telegram/webhook')throw Error('Bot already belongs to another site');
  await call('setWebhook',{url:target,secret_token:env.TELEGRAM_WEBHOOK_SECRET,allowed_updates:['message'],drop_pending_updates:false});
 }
