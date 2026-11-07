@@ -1,0 +1,11 @@
+// Run against a downloaded backup prefix, never against production.
+import {readFileSync,mkdirSync,existsSync} from 'node:fs';import {resolve,join} from 'node:path';import {createHash} from 'node:crypto';import {DatabaseSync} from 'node:sqlite';
+const root=resolve(process.argv[2]||'');if(!process.argv[2])throw Error('Usage: node scripts/verify-backup.mjs <directory containing backups/>');
+const day=process.argv[3];if(!/^\d{4}-\d{2}-\d{2}$/.test(day||''))throw Error('Pass the backup day as YYYY-MM-DD');
+const manifest=JSON.parse(readFileSync(join(root,'backups',day,'manifest.json'),'utf8'));if(manifest.phase!=='complete')throw Error('Backup is incomplete');
+const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=OFF');for(const table of manifest.tables)db.exec(table.sql);
+let rows=0;for(const part of manifest.parts){if(!part.key.startsWith('backups/'+day+'/tables/')||part.key.includes('..'))throw Error('Invalid backup path');const raw=readFileSync(join(root,part.key));if(createHash('sha256').update(raw).digest('hex')!==part.sha256)throw Error('Checksum mismatch: '+part.key);for(const row of JSON.parse(raw)){const fields=Object.keys(row);if(!fields.every(f=>/^[A-Za-z_][A-Za-z0-9_]*$/.test(f))||!/^[A-Za-z_][A-Za-z0-9_]*$/.test(part.table))throw Error('Invalid identifier');db.prepare(`INSERT INTO "${part.table}" (${fields.map(f=>'"'+f+'"').join(',')}) VALUES (${fields.map(()=>'?').join(',')})`).run(...fields.map(f=>row[f]));rows++}}
+for(const index of manifest.indexes||[])db.exec(index.sql);
+const check=db.prepare('PRAGMA integrity_check').get();if(Object.values(check)[0]!=='ok')throw Error('SQLite integrity failed');const fk=db.prepare('PRAGMA foreign_key_check').all();if(fk.length)throw Error('Relations changed during the logical backup. Use D1 Time Travel instead.');
+if(manifest.tables.some(t=>t.name==='media'))for(const media of db.prepare('SELECT key FROM media').all()){if(!/^media\/[A-Za-z0-9-]+$/.test(media.key)||!existsSync(join(root,'backups/assets',media.key)))throw Error('Missing media: '+media.key)}
+console.log(`Verified ${manifest.tables.length} tables and ${rows} rows; database integrity, foreign keys and media presence passed. Logical snapshot only: use D1 Time Travel for an exact point in time.`);db.close();

@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS funnel_daily(day TEXT NOT NULL,event TEXT NOT NULL,total INTEGER NOT NULL DEFAULT 0,PRIMARY KEY(day,event));
+CREATE TABLE IF NOT EXISTS sales_leads(id TEXT PRIMARY KEY,name TEXT NOT NULL,contact TEXT NOT NULL,niche TEXT NOT NULL,package TEXT NOT NULL,note TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'new',created TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS projects_owner_updated ON projects(owner,updated,id);
