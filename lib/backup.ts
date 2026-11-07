@@ -1,6 +1,6 @@
 // Incremental logical snapshots. D1 Time Travel remains the source for atomic point-in-time recovery.
 type Table={name:string;sql:string};
-export type BackupState={day:string;started:string;completed?:string;phase:'tables'|'assets'|'complete';table:number;offset:number;assetCursor:string|null;tables:Table[];indexes:Table[];parts:{key:string;table:string;rows:number;sha256:string}[];assets:number;error?:string};
+export type BackupState={day:string;started:string;completed?:string;phase:'tables'|'assets'|'manifest'|'complete';table:number;offset:number;assetCursor:string|null;tables:Table[];indexes:Table[];parts:{key:string;table:string;rows:number;sha256:string}[];assets:number;error?:string};
 export async function backupState(env:Cloudflare.Env){return env.BUCKET?await (await env.BUCKET.get('backups/state.json'))?.json<BackupState>()||null:null}
 const identifier=(s:string)=>{if(!/^[A-Za-z_][A-Za-z0-9_]*$/.test(s))throw Error('Invalid backup table');return '"'+s+'"'};
 export async function backupTick(env:Cloudflare.Env){
@@ -15,8 +15,9 @@ export async function backupTick(env:Cloudflare.Env){
    if(result.results.length<10){state.table++;state.offset=0}
   }
  }else if(state.phase==='assets'){
-  const page=await bucket.list({prefix:'media/',limit:10,...(state.assetCursor?{cursor:state.assetCursor}:{})});for(const obj of page.objects){const target='backups/assets/'+obj.key;if(!await bucket.head(target)){const source=await bucket.get(obj.key);if(!source)throw Error('Missing source media');await bucket.put(target,source.body,{httpMetadata:source.httpMetadata})}}state.assets+=page.objects.length;state.assetCursor=page.truncated?page.cursor:null;if(!page.truncated){state.phase='complete';state.completed=new Date().toISOString();await bucket.put(`backups/${state.day}/manifest.json`,JSON.stringify({...state,consistency:'Logical copy across multiple reads. Use D1 Time Travel for atomic recovery.'}),{httpMetadata:{contentType:'application/json'}})}
+  const page=await bucket.list({prefix:'media/',limit:10,...(state.assetCursor?{cursor:state.assetCursor}:{})});for(const obj of page.objects){const target='backups/assets/'+obj.key;if(!await bucket.head(target)){const source=await bucket.get(obj.key);if(!source)throw Error('Missing source media');await bucket.put(target,source.body,{httpMetadata:source.httpMetadata})}}state.assets+=page.objects.length;state.assetCursor=page.truncated?page.cursor:null;if(!page.truncated)state.phase='manifest';
  }
+ if(state.phase==='manifest'){const complete:BackupState={...state,phase:'complete',completed:new Date().toISOString()};delete complete.error;await bucket.put(`backups/${state.day}/manifest.json`,JSON.stringify({...complete,consistency:'Logical copy across multiple reads. Use D1 Time Travel for atomic recovery.'}),{httpMetadata:{contentType:'application/json'}});state=complete}
  delete state.error;await bucket.put('backups/state.json',JSON.stringify(state));
  }catch(e){state.error='Не удалось завершить этап. Повтор при следующем запуске.';await bucket.put('backups/state.json',JSON.stringify(state));console.error(JSON.stringify({event:'backup_failed',day:state.day,phase:state.phase}));throw e}
 }finally{await db.prepare("UPDATE client_login_attempts SET expires=0 WHERE key='backup-lease' AND expires=?").bind(lease).run()}
