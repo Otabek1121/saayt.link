@@ -1,8 +1,9 @@
 'use client';
 
 import {useEffect,useState} from 'react';
-import {ArrowUpRight,ArrowRight,Check,ChevronDown,Contact,Globe2,Instagram,MapPin,Menu,Nfc,Phone,ShieldCheck,Smartphone,Star,Wifi,X} from 'lucide-react';
+import {ArrowUpRight,ArrowRight,Check,ChevronDown,Contact,Globe2,Camera,MapPin,Menu,Nfc,Phone,ShieldCheck,Smartphone,Star,Wifi,X} from 'lucide-react';
 import './nfc-landing.css';
+import PortfolioCarousel from './portfolio-carousel';
 
 const products=[
   {number:'01',name:'NFC визитки',uz:'NFC vizitkalar',description:'Контакты, соцсети и портфолио — одним касанием. Для предпринимателей, специалистов и команд.',icon:Contact,style:'card'},
@@ -58,7 +59,7 @@ export default function NfcLanding(){
      <div className="nfc-shell nfc-hero-grid">
        <div className="nfc-hero-copy">
          <div className="nfc-eyebrow"><span className="nfc-live-dot"/> NFC • QR • DIGITAL BUSINESS</div>
-         <h1>Одно касание.<br/><em>Новые возможности.</em></h1>
+         <h1>Ваш бизнес ближе.<br/><em>В одно касание.</em></h1>
          <p>Современные NFC-визитки, QR-таблички и цифровые страницы для вашего бизнеса. Ваши контакты, услуги и ссылки — всегда под рукой.</p>
          <div className="nfc-hero-actions"><a href="/studio" className="nfc-button nfc-button-light">Создать визитку <ArrowUpRight size={20}/></a><a href="#products" className="nfc-button nfc-button-outline">Посмотреть продукты <ArrowRight size={19}/></a></div>
          <div className="nfc-hero-note"><span className="nfc-note-avatars"><i>✦</i><i>↗</i><i>◎</i></span><span>Одна цифровая страница — множество способов поделиться</span></div>
@@ -66,7 +67,7 @@ export default function NfcLanding(){
        <div className="nfc-hero-visual" aria-label="Пример NFC визитки и цифрового профиля">
         <div className="nfc-floating-text nfc-float-a">TAP<br/>TO CONNECT <ArrowUpRight size={16}/></div>
         <div className="nfc-hero-orbit orbit-a"/><div className="nfc-hero-orbit orbit-b"/>
-        <div className="nfc-profile-preview"><div className="nfc-preview-avatar">S</div><strong>Ваше имя</strong><small>Ваша компания · Digital card</small><div className="nfc-preview-line"><Phone size={15}/> Позвонить <ArrowUpRight size={14}/></div><div className="nfc-preview-line"><Instagram size={15}/> Социальные сети <ArrowUpRight size={14}/></div><div className="nfc-preview-line"><MapPin size={15}/> Адрес и карта <ArrowUpRight size={14}/></div></div>
+        <div className="nfc-profile-preview"><div className="nfc-preview-avatar">S</div><strong>Ваше имя</strong><small>Ваша компания · Digital card</small><div className="nfc-preview-line"><Phone size={15}/> Позвонить <ArrowUpRight size={14}/></div><div className="nfc-preview-line"><Camera size={15}/> Социальные сети <ArrowUpRight size={14}/></div><div className="nfc-preview-line"><MapPin size={15}/> Адрес и карта <ArrowUpRight size={14}/></div></div>
         <DemoCard/>
         <div className="nfc-floating-badge"><span><Check size={15}/></span> NFC + QR READY</div>
         <div className="nfc-floating-text nfc-float-b">THE FUTURE<br/>IS CONTACTLESS</div>
@@ -87,7 +88,7 @@ export default function NfcLanding(){
    <section className="nfc-feature-band"><div className="nfc-shell nfc-feature-grid"><div><Nfc size={30}/><h3>Одно касание</h3><p>Контакты открываются мгновенно на совместимых устройствах.</p></div><div><Globe2 size={30}/><h3>Всегда актуально</h3><p>Обновляйте данные на своей цифровой странице.</p></div><div><ShieldCheck size={30}/><h3>Без приложения</h3><p>Получателю нужен только браузер или камера телефона.</p></div></div></section>
    <section className="nfc-section nfc-how" id="how"><div className="nfc-shell"><div className="nfc-section-head"><div><span className="nfc-section-label">03 / ЭТО ПРОСТО</span><h2>Три шага.<br/><em>Без лишних сложностей.</em></h2></div></div><div className="nfc-step-grid">{steps.map(([n,title,body])=><article key={n}><span className="nfc-step-number">{n}</span><div className="nfc-step-line"/><h3>{title}</h3><p>{body}</p></article>)}</div><div className="nfc-how-actions"><a href="/studio" className="nfc-button nfc-button-dark">Начать сейчас <ArrowUpRight size={19}/></a></div></div></section>
    <section className="nfc-section nfc-demo-section"><div className="nfc-shell nfc-demo-grid"><div className="nfc-demo-show"><div className="nfc-demo-halo"/><DemoCard/><span className="nfc-demo-point">01 — NFC</span><span className="nfc-demo-point point-two">02 — QR</span></div><div className="nfc-demo-copy"><span className="nfc-section-label">04 / КАК ЭТО ВЫГЛЯДИТ</span><h2>Технологии,<br/>которые <em>впечатляют.</em></h2><p>Поднесите телефон к NFC-карточке или наведите камеру на QR-код. Откроется ваша персональная страница с актуальными контактами, ссылками и информацией.</p><div className="nfc-check-list"><span><Check size={17}/> Контакты и мессенджеры</span><span><Check size={17}/> Сайт, меню или портфолио</span><span><Check size={17}/> Карта и адрес</span><span><Check size={17}/> Возможность обновлять информацию</span></div><a className="nfc-inline-link" href="/templates">Выбрать дизайн <ArrowUpRight size={18}/></a></div></div></section>
-   <section className="nfc-section nfc-works" id="works"><div className="nfc-shell"><div className="nfc-section-head"><div><span className="nfc-section-label">05 / ПОРТФОЛИО</span><h2>Наши <em>работы.</em></h2></div><p>Здесь появятся реальные проекты, фотографии и готовые NFC-изделия.</p></div><div className="nfc-works-empty"><span className="nfc-empty-icon"><Star size={34} strokeWidth={1}/></span><strong>Скоро здесь появятся наши работы</strong><p>Мы готовим галерею выполненных проектов. Пока раздел оставлен свободным.</p></div></div></section>
+   <section className="nfc-section nfc-works" id="works"><div className="nfc-shell"><div className="nfc-section-head"><div><span className="nfc-section-label">05 / ПОРТФОЛИО</span><h2>Наши <em>работы.</em></h2></div><p>Здесь появятся реальные проекты, фотографии и готовые NFC-изделия.</p></div><PortfolioCarousel/></div></section>
    <section className="nfc-section nfc-faq" id="faq"><div className="nfc-shell nfc-faq-grid"><div><span className="nfc-section-label">06 / ПОЛЕЗНО ЗНАТЬ</span><h2>Частые<br/><em>вопросы.</em></h2><p>Не нашли ответ? Создайте цифровую страницу в конструкторе и посмотрите, как всё устроено.</p><a className="nfc-inline-link" href="/studio">Открыть конструктор <ArrowUpRight size={18}/></a></div><div className="nfc-faq-list">{faq.map(([question,answer],i)=><div className={'nfc-faq-item '+(openedFaq===i?'active':'')} key={question}><button aria-expanded={openedFaq===i} onClick={()=>setOpenedFaq(openedFaq===i?null:i)}><span>{question}</span><ChevronDown size={19}/></button>{openedFaq===i&&<p>{answer}</p>}</div>)}</div></div></section>
    <section className="nfc-cta-section"><div className="nfc-shell nfc-cta-inner"><span className="nfc-section-label">НАЧНИТЕ СЕГОДНЯ</span><h2>Ваш бизнес заслуживает<br/><em>лучшего первого впечатления.</em></h2><p>Создайте современную цифровую визитку и делитесь ею через ссылку, QR-код или NFC.</p><div className="nfc-cta-buttons"><a className="nfc-button nfc-button-light" href="/studio">Создать свою страницу <ArrowUpRight size={20}/></a><a className="nfc-button nfc-button-outline" href="/templates">Посмотреть шаблоны <ArrowRight size={19}/></a></div><div className="nfc-cta-decoration">S.</div></div></section>
   </main>
