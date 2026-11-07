@@ -1,4 +1,4 @@
-import type {Template} from './template-catalog';import type {PublicLanguage} from './public-i18n';
+import type {Template} from './template-catalog';import {uiText,type PublicLanguage} from './public-i18n';
 export const catalogDescriptions={
   "hostel": [
     "Xonalar, yashash shartlari va suratlarni ko‘ring. Kerakli sanalarga so‘rov yuboring.",
@@ -151,4 +151,4 @@ export const catalogDescriptions={
     "Фаъолият, хизматҳо ва тамосро пешниҳод кунед. Вазифа ва қадами навбатиро бо муштарӣ муҳокима кунед."
   ]
 } as const;
-export function templateDescription(template:Template,language:PublicLanguage){if(language==='ru')return template.description;const index=language==='uz'?0:language==='kk'?1:language==='en'?2:3;if(template.restaurantStyle==='fastfood')return ['Fastfud: burgerlar, pitsa va sevimli gazaklar.','Фастфуд: бургерлер, пицца және сүйікті тіскебасарлар.','Fast food: burgers, pizza and favourite snacks.','Таомҳои зудтайёр: бургер, питса ва газакҳои дӯстдошта.'][index];if(template.restaurantStyle==='japanese')return ['Yapon taomlari: ixcham menyu va detallarga eʼtibor.','Жапон тағамдары: ықшам мәзір және бөлшектерге назар.','Japanese cuisine: a concise menu with attention to detail.','Таомҳои ҷопонӣ: менюи мухтасар ва таваҷҷуҳ ба ҷузъиёт.'][index];return catalogDescriptions[template.niche][index]}
+export function templateDescription(template:Template,language:PublicLanguage){if(template.pageType==='contact-card')return uiText(language,'Телефоны, сайт и социальные сети. Фото внизу, QR-код и свой цвет.');if(language==='ru')return template.description;const index=language==='uz'?0:language==='kk'?1:language==='en'?2:3;if(template.restaurantStyle==='fastfood')return ['Fastfud: burgerlar, pitsa va sevimli gazaklar.','Фастфуд: бургерлер, пицца және сүйікті тіскебасарлар.','Fast food: burgers, pizza and favourite snacks.','Таомҳои зудтайёр: бургер, питса ва газакҳои дӯстдошта.'][index];if(template.restaurantStyle==='japanese')return ['Yapon taomlari: ixcham menyu va detallarga eʼtibor.','Жапон тағамдары: ықшам мәзір және бөлшектерге назар.','Japanese cuisine: a concise menu with attention to detail.','Таомҳои ҷопонӣ: менюи мухтасар ва таваҷҷуҳ ба ҷузъиёт.'][index];return catalogDescriptions[template.niche][index]}
