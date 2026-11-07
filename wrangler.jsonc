@@ -7,8 +7,10 @@
     "nodejs_compat"
   ],
   "workers_dev": true,
+  "observability": {"enabled": true,"head_sampling_rate": 0.1},
   "vars": {
     "AUTH_PROVIDER": "google",
+    "SALES_ADMIN_EMAIL": "theazik00@gmail.com",
     "PUBLIC_SITE_ORIGIN": "https://saayt.link",
     "PREVIOUS_SITE_ORIGIN": "https://saayt-link.theazik00.workers.dev"
   },

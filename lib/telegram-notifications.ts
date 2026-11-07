@@ -1,5 +1,5 @@
 import {tokenHash} from './client-password';
-async function send(env:Cloudflare.Env,chat:string,text:string){
+export async function sendTelegram(env:Cloudflare.Env,chat:string,text:string){
  const r=await fetch('https://api.telegram.org/bot'+env.TELEGRAM_BOT_TOKEN+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:chat,text:text.slice(0,3900),protect_content:true}),signal:AbortSignal.timeout(12000)});
  const data=await r.json() as {ok:boolean;parameters?:{retry_after?:number}};
  if(!r.ok||!data.ok)throw Object.assign(Error('telegram_delivery_failed'),{retryAfter:data.parameters?.retry_after});
@@ -12,12 +12,12 @@ export async function telegramWebhook(request:Request,env:Cloudflare.Env){
  let update:{message?:{text?:string;chat:{id:number;type:string};from?:{id:number;username?:string}}};try{update=JSON.parse(raw)}catch{return new Response(null,{status:400})}
  const msg=update.message;if(!msg||msg.chat.type!=='private'||msg.from?.id!==msg.chat.id)return Response.json({ok:true});
  const chat=String(msg.chat.id);
- if(msg.text==='/stop'){await env.DB.prepare('UPDATE client_credentials SET telegram_chat_id=NULL, connect_hash=NULL WHERE telegram_chat_id=?').bind(chat).run();await send(env,chat,'Уведомления отключены. Для повторного подключения получите новую ссылку в кабинете.');return Response.json({ok:true})}
+ if(msg.text==='/stop'){await env.DB.prepare('UPDATE client_credentials SET telegram_chat_id=NULL, connect_hash=NULL WHERE telegram_chat_id=?').bind(chat).run();await sendTelegram(env,chat,'Уведомления отключены. Для повторного подключения получите новую ссылку в кабинете.');return Response.json({ok:true})}
  const token=/^\/start\s+([A-Za-z0-9_-]{20,64})$/.exec(msg.text||'')?.[1];
- if(!token){await send(env,chat,'Откройте ссылку подключения из кабинета вашего сайта и нажмите Start. Отключить уведомления: /stop');return Response.json({ok:true})}
+ if(!token){await sendTelegram(env,chat,'Откройте ссылку подключения из кабинета вашего сайта и нажмите Start. Отключить уведомления: /stop');return Response.json({ok:true})}
  const hash=await tokenHash(token),now=Math.floor(Date.now()/1000);const row=await env.DB.prepare('SELECT project_id,telegram_username FROM client_credentials WHERE connect_hash=? AND connect_expires>? AND enabled=1').bind(hash,now).first<{project_id:string;telegram_username:string}>();
- if(!row||row.telegram_username&&row.telegram_username!==(msg.from.username||'').toLowerCase()){await send(env,chat,'Ссылка истекла или предназначена другому Telegram аккаунту. Попросите новую ссылку.');return Response.json({ok:true})}
- const changed=await env.DB.prepare('UPDATE client_credentials SET telegram_chat_id=?,connect_hash=NULL,connect_expires=NULL WHERE project_id=? AND connect_hash=? AND connect_expires>? AND enabled=1').bind(chat,row.project_id,hash,now).run();if(changed.meta.changes)await send(env,chat,'Сайт подключён. Новые заявки будут приходить сюда. Отключить уведомления: /stop');
+ if(!row||row.telegram_username&&row.telegram_username!==(msg.from.username||'').toLowerCase()){await sendTelegram(env,chat,'Ссылка истекла или предназначена другому Telegram аккаунту. Попросите новую ссылку.');return Response.json({ok:true})}
+ const changed=await env.DB.prepare('UPDATE client_credentials SET telegram_chat_id=?,connect_hash=NULL,connect_expires=NULL WHERE project_id=? AND connect_hash=? AND connect_expires>? AND enabled=1').bind(chat,row.project_id,hash,now).run();if(changed.meta.changes)await sendTelegram(env,chat,'Сайт подключён. Новые заявки будут приходить сюда. Отключить уведомления: /stop');
  return Response.json({ok:true});
 }
 export function notificationText(site:string,kind:string,p:Record<string,unknown>){
@@ -35,7 +35,7 @@ export async function flushNotifications(env:Cloudflare.Env){
  const claimed=await db.prepare(`UPDATE notification_outbox SET status='sending',attempts=attempts+1,next_attempt=? WHERE event_id=? AND status IN ('pending','sending') AND next_attempt<=? RETURNING attempts,project_id`).bind(now+120,event.event_id,now).first<{attempts:number;project_id:string}>();if(!claimed)continue;
  try{const row=await db.prepare(`SELECT c.telegram_chat_id,c.enabled,p.name,p.public_slug,g.kind,g.payload FROM client_credentials c JOIN projects p ON p.id=c.project_id JOIN guest_entries g ON g.project_id=c.project_id WHERE g.id=?`).bind(event.event_id).first<{telegram_chat_id:string|null;enabled:number;name:string;public_slug:string|null;kind:string;payload:string}>();
  if(!row?.enabled||!row.telegram_chat_id){await db.prepare("UPDATE notification_outbox SET status='pending',attempts=attempts-1,next_attempt=?,last_error='not_connected' WHERE event_id=?").bind(now+300,event.event_id).run();continue}
- await send(env,row.telegram_chat_id,notificationText(row.name,row.kind,JSON.parse(row.payload))+(row.public_slug&&env.PUBLIC_SITE_ORIGIN?'\nКабинет: '+env.PUBLIC_SITE_ORIGIN+'/s/'+row.public_slug+'/manage':''));
+ await sendTelegram(env,row.telegram_chat_id,notificationText(row.name,row.kind,JSON.parse(row.payload))+(row.public_slug&&env.PUBLIC_SITE_ORIGIN?'\nКабинет: '+env.PUBLIC_SITE_ORIGIN+'/s/'+row.public_slug+'/manage':''));
  await db.prepare("UPDATE notification_outbox SET status='sent',last_error='' WHERE event_id=?").bind(event.event_id).run();
  }catch(e){const retryAfter=(e as {retryAfter?:number}).retryAfter||Math.min(3600,30*2**claimed.attempts);await db.prepare('UPDATE notification_outbox SET status=?,next_attempt=?,last_error=? WHERE event_id=?').bind(claimed.attempts>=10?'failed':'pending',now+retryAfter,'delivery_failed',event.event_id).run()}
  }

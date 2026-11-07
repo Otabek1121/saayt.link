@@ -1,6 +1,6 @@
 import {normalizeSpec,type Spec} from './spec';import {businessProfiles,isCatalog,isMenu} from './business-profiles';
 import type {Photo} from './photo';
-export const PUBLIC_ORIGIN='https://forma-business-studio.theazik00.chatgpt.site';
+export const PUBLIC_ORIGIN='https://saayt.link';
 export const RESERVED_SLUGS=new Set(['admin','api','site','signin','signout','callback','support','templates','media','images','settings','account','login']);
 export function validSlug(slug:string){return /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])$/.test(slug)&&!slug.includes('--')&&!RESERVED_SLUGS.has(slug)}
 const letters:Record<string,string>={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',ч:'ch',ш:'sh',щ:'shch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya',ў:'o',қ:'q',ғ:'g',ҳ:'h'};
