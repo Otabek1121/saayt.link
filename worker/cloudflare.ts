@@ -1,4 +1,5 @@
 import {shopApi} from '../lib/orbek/shop';
+import businessCard from '../lib/orbek/card.html?raw';
 import storefront from '../lib/orbek/store.html?raw';
 import editor from '../lib/orbek/admin.html?raw';
 import {publicLanguage} from '../lib/public-i18n';
@@ -14,6 +15,9 @@ export default {
     for(const name of [...headers.keys()]) if(name.startsWith('oai-authenticated-user-')) headers.delete(name);
     const clean=new Request(request,{headers});
     const url=new URL(clean.url);
+    if ((clean.method==='GET'||clean.method==='HEAD') && /^\/orbek\/card\/?$/.test(url.pathname)) {
+      return new Response(clean.method==='HEAD'?null:businessCard,{headers:{'Content-Type':'text/html;charset=utf-8','Cache-Control':'no-cache'}});
+    }
     if (clean.method==="GET" && ["/orbek","/orbek/","/orbek/admin","/orbek/admin/"].includes(url.pathname)) return new Response(url.pathname.includes("/admin") ? editor : storefront,{headers:{"Content-Type":"text/html;charset=utf-8","Cache-Control":"no-cache"}});
     if (url.pathname.startsWith("/orbek/api/") || url.pathname.startsWith("/orbek/photo/")) return shopApi(clean,env);
     if(env.PREVIOUS_SITE_ORIGIN&&url.origin===env.PREVIOUS_SITE_ORIGIN&&env.PUBLIC_SITE_ORIGIN&&['GET','HEAD'].includes(clean.method)&&(url.pathname==='/'||url.pathname==='/templates'||/^\/s\/[a-z0-9-]+$/.test(url.pathname))){const target=new URL(env.PUBLIC_SITE_ORIGIN);target.pathname=url.pathname;target.search=url.search;return Response.redirect(target.href,308)}
