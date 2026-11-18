@@ -21,7 +21,9 @@ const langs={uz:'O‘zbekcha',ru:'Русский',en:'English',zh:'中文',hi:'�
 let lang=localStorage.getItem('orbek-lang');
 if(!Object.hasOwn(langs,lang))lang='ru';
 let model,editing=null,previewUrl='',activeStatus='',busy=false,conflict=false;
-const t=key=>strings[lang][keys.indexOf(key)]||optionLabel(lang,key);
+const accessKeys=['password','newPass','logout','wrong','slow'];
+const accessLabels={ru:['Пароль','Новый пароль для входа по номеру (от 12 символов)','Выйти','Проверьте номер и пароль.','Повторите через 15 минут.'],en:['Password','New phone login password (12 characters minimum)','Sign out','Check your number and password.','Try again in 15 minutes.'],uz:['Parol','Telefon orqali kirish uchun yangi parol (kamida 12 belgi)','Chiqish','Raqam va parolni tekshiring.','15 daqiqadan keyin qayta urining.'],hi:['पासवर्ड','फ़ोन लॉगिन का नया पासवर्ड (कम से कम 12 अक्षर)','लॉग आउट','नंबर और पासवर्ड जाँचें।','15 मिनट बाद कोशिश करें।'],zh:['密码','手机号登录的新密码（至少12个字符）','退出','请检查手机号和密码。','请在15分钟后重试。']};
+const t=key=>accessLabels[lang][accessKeys.indexOf(key)]||strings[lang][keys.indexOf(key)]||optionLabel(lang,key);
 function el(tag,txt){const node=document.createElement(tag);if(txt!=null)node.textContent=txt;return node}
 for(const [key,label] of Object.entries(langs)){
  const wrap=el('label',label),input=el('input');input.id='name-'+key;input.lang=key;input.required=true;input.maxLength=160;wrap.append(input);$('names').append(wrap)
@@ -128,7 +130,15 @@ async function start(){
  try{
   const response=await request('/orbek/api/catalog',{cache:'no-store'});model=await response.json();status();
   if(!model.admin){$('guard').hidden=false;return}
+  $('setPassword').hidden=!model.owner;$('logout').hidden=model.owner;
   $('panel').hidden=false;controls.forEach(id=>$(id).value=model.contacts[id]||'');renderList();
  }catch{status('error',true);const retry=el('button',t('retry'));retry.type='button';retry.onclick=start;$('status').append(' ',retry)}
 }
+async function submitAccess(path,body){
+ try{await request('/orbek/api/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return true}
+ catch(e){status(e.code===429?'slow':e.code===401?'wrong':'error',true);return false}
+}
+$('phoneLogin').onsubmit=async event=>{event.preventDefault();if(await submitAccess('login',{phone:$('loginPhone').value,password:$('loginPassword').value}))location.reload()};
+$('setPassword').onsubmit=async event=>{event.preventDefault();if(await submitAccess('set-password',{password:$('newPassword').value})){$('newPassword').value='';status('saved')}};
+$('logout').onclick=async()=>{if(await submitAccess('logout',{}))location.reload()};
 translate();start();
