@@ -28,6 +28,30 @@ function el(tag,txt){const node=document.createElement(tag);if(txt!=null)node.te
 for(const [key,label] of Object.entries(langs)){
  const wrap=el('label',label),input=el('input');input.id='name-'+key;input.lang=key;input.required=true;input.maxLength=160;wrap.append(input);$('names').append(wrap)
 }
+const nameLabels={
+ ru:['Название товара','Ввести своё название'],uz:['Mahsulot nomi','Yangi nom kiritish'],
+ en:['Product name','Enter a custom name'],zh:['商品名称','输入新名称'],hi:['उत्पाद का नाम','नया नाम दर्ज करें']
+};
+let customNames={},usingPreset=false;
+function listNames(){
+ const select=$('namePreset'),selected=select.value;
+ $('nameChoiceLabel').textContent=nameLabels[lang][0];
+ select.replaceChildren(new Option(nameLabels[lang][1],''));
+ const seen=new Set();
+ for(const item of [...model.items].sort((a,b)=>a.names[lang].localeCompare(b.names[lang],lang))){
+  const key=JSON.stringify(Object.keys(langs).map(code=>item.names[code]));
+  if(seen.has(key))continue;
+  seen.add(key);select.add(new Option(item.names[lang],item.id));
+ }
+ select.value=selected;
+}
+$('namePreset').onchange=()=>{
+ if(!usingPreset)customNames=Object.fromEntries(Object.keys(langs).map(code=>[code,$('name-'+code).value]));
+ const source=model.items.find(item=>item.id===$('namePreset').value);
+ usingPreset=Boolean(source);
+ for(const code of Object.keys(langs))$('name-'+code).value=(source?.names||customNames)[code]||'';
+ $('name-'+lang).focus();
+};
 function status(key='',error=false){activeStatus=key;$('status').textContent=key?t(key):'';$('status').className=error?'error':''}
 function translate(){
  document.documentElement.lang=lang;$('lang').setAttribute('aria-label',({ru:'Язык',uz:'Til',zh:'语言',hi:'भाषा',en:'Language'})[lang]);document.title=t('title')+' · ORBEK';$('lang').value=lang;
@@ -36,7 +60,7 @@ function translate(){
  if(cats.includes(current))$('category').value=current;
  $('heading').textContent=t(editing?'editing':'new');
  if(activeStatus)status(activeStatus,$('status').classList.contains('error'));
- if(model){renderList();renderGallery()}
+ if(model){renderList();renderGallery();listNames()}
 }
 $('lang').onchange=()=>{lang=$('lang').value;localStorage.setItem('orbek-lang',lang);translate()};
 $('catalogSearch').oninput=renderList;
@@ -64,6 +88,7 @@ function renderGallery(){
 function clearPreview(){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=''}
 function openItem(item=null){
  clearPreview();editing=item;retainedPhotos=[...(item?.photos||[])];renderGallery();$('editor').reset();$('editor').hidden=false;$('remove').hidden=!item;$('heading').textContent=t(item?'editing':'new');
+ $('nameChoice').hidden=Boolean(item);customNames={};usingPreset=false;listNames();$('namePreset').value='';
  $('category').value=item?.category||cats[0];$('price').value=item?.price??'';
  for(const key of Object.keys(langs))$('name-'+key).value=item?.names[key]||'';
  $('preview').hidden=!item?.image;if(item?.image)$('preview').src=item.image;else $('preview').removeAttribute('src');
