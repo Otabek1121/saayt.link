@@ -1,3 +1,4 @@
+import {access,phoneSession} from './access';
 import { z } from 'zod';
 import { readSession } from '../cloudflare-auth';
 import { initialCatalog } from './seed';
@@ -53,11 +54,13 @@ export async function shopApi(req:Request,env:Cloudflare.Env) {
     return object?new Response(object.body,{headers:{'Content-Type':object.httpMetadata?.contentType||'application/octet-stream','Cache-Control':'public,max-age=31536000,immutable','X-Content-Type-Options':'nosniff'}}):reply({},404);
   }
   const user=await readSession(req.headers,env);
-  const admin=Boolean(user?.email && !user.clientProjectId && user.email.toLowerCase()===env.SALES_ADMIN_EMAIL?.toLowerCase());
+  const owner=Boolean(user?.email && !user.clientProjectId && user.email.toLowerCase()===env.SALES_ADMIN_EMAIL?.toLowerCase());
+  if(['/api/login','/api/logout','/api/set-password'].includes(path))return access(req,env,path,owner);
+  const admin=owner||await phoneSession(req,env);
   if(path==='/api/catalog'&&req.method==='GET'){
     const obj=await bucket.get(catalogKey);
     const data=obj?await obj.json<typeof initialCatalog>():initialCatalog;
-    return reply({...data,revision:obj?.etag||'initial',admin});
+    return reply({...data,revision:obj?.etag||'initial',admin,owner});
   }
   if(!admin || req.headers.get('origin')!==new URL(req.url).origin)return reply({},403);
   if(path==='/api/catalog'&&req.method==='PUT'){
