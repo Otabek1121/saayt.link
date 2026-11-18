@@ -5,13 +5,13 @@ let lang="ru";
 try{lang=localStorage.getItem("orbek-lang")||"ru"}catch{}
 if(!(lang in lexicon))lang="ru";
 let catalog=null,rate=null,rateSettled=false,failed=false,category="",openItem=null;
-const t=key=>lexicon[lang][key]||key;
+const t=key=>lexicon[lang][key]||optionLabel(lang,key)||key;
 const el=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!=null)n.textContent=value;return n};
 const format=(n,d=0)=>new Intl.NumberFormat(locale[lang],{maximumFractionDigits:d}).format(n);
 function allowed(value,kind){
  if(!value)return "";
  if(kind==="phone"){const n=String(value).replace(/^tel:/,"").replace(/[\s()-]/g,"");return /^\+?\d{6,16}$/.test(n)?"tel:"+n:""}
- try{const u=new URL(value,location.origin);if(kind==="image"&&u.origin===location.origin)return u.href;if(u.protocol!=="https:")return "";if(kind==="telegram"&&!["t.me","telegram.me"].includes(u.hostname))return "";return u.href}catch{return ""}
+ try{const u=new URL(value,location.origin);if(kind==="image"&&u.origin===location.origin)return u.href;if(u.protocol!=="https:")return "";if(kind==="whatsapp"&&u.hostname!=="wa.me")return "";if(kind==="telegram"&&!["t.me","telegram.me"].includes(u.hostname))return "";return u.href}catch{return ""}
 }
 function rateText(){
  if(!rate?.rate){$("rate").textContent=rateSettled?t("noRate"):"";return}
@@ -40,8 +40,18 @@ function drawDetail(){
  const i=openItem,copy=el("div","modal-copy");
  copy.append(el("div","category",t(i.category)),el("h2","",title(i)),prices(i));
  if(i.demo)copy.append(el("p","fine",t("sample")));
- const a=el("a","detail-link",t("ask"));a.href="#contacts";a.onclick=()=>$("detail").close();copy.append(a);
- $("detailbody").replaceChildren(photo(i),copy);$("detail").setAttribute("aria-label",title(i));
+ const c=catalog.contacts,chat=allowed(c.telegram,"telegram")||allowed(c.whatsapp,"whatsapp")||allowed(c.phone,"phone");
+ const a=el("a","detail-link",t("ask"));a.href=chat||"#contacts";a.onclick=()=>$("detail").close();copy.append(a);
+ const mainPhoto=photo(i);
+ if(i.photos?.length){
+  const strip=el("div","photo-strip");
+  [i.image,...i.photos].forEach((url,index)=>{
+   const b=el("button");b.type="button";b.setAttribute("aria-label",t("photoLabel")+" "+(index+1));
+   b.append(photo({image:url}));b.onclick=()=>{mainPhoto.src=url;strip.querySelectorAll("button").forEach(other=>other.setAttribute("aria-pressed",String(b===other)))};
+   b.setAttribute("aria-pressed",String(index===0));strip.append(b);
+  });copy.prepend(strip);
+ }
+ $("detailbody").replaceChildren(mainPhoto,copy);$("detail").setAttribute("aria-label",title(i));
 }
 function renderProducts(){
  const grid=$("products");grid.replaceChildren();
@@ -60,7 +70,7 @@ function renderProducts(){
 function contacts(){
  const c=catalog?.contacts||{},links=$("links");links.replaceChildren();
  const map=allowed(c.map,"map"),phone=allowed(c.phone,"phone"),tg=allowed(c.telegram,"telegram");
- const items=[[phone,String(c.phone||"").replace(/^tel:/,"")],[tg,"Telegram"],[map||"https://www.google.com/maps/search/?api=1&query=ORBEK+Samarkand",t(map?"map":"find")]];
+ const items=[[phone,String(c.phone||"").replace(/^tel:/,"")],[tg,t("manager")],[allowed(c.channel,"telegram"),t("channel")],[allowed(c.whatsapp,"whatsapp"),"WhatsApp"],[map||"https://www.google.com/maps/search/?api=1&query=ORBEK+Samarkand",t(map?"map":"find")]];
  for(const [href,label] of items){if(!href)continue;const a=el("a","",label);a.href=href;if(href.startsWith("https:")){a.target="_blank";a.rel="noopener noreferrer"}links.append(a)}
  $("address").textContent=map&&/rudak|рудак/i.test(map)&&map.includes("150")?t("address"):t("city");
 }

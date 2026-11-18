@@ -9,13 +9,13 @@ const imagePattern = /^\/orbek\/(?:img\/[a-z-]+\.webp|photo\/[a-f0-9-]{36})$/;
 const name = z.string().trim().min(1).max(180);
 const item = z.object({
   id:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),
-  category:z.enum(['faucet','sink','shower','toilet','mirror','tub','vanity','accessories']),
-  demo:z.boolean().optional(),price:z.number().int().nonnegative().max(1e12), image:z.string().regex(imagePattern),
+  category:z.enum(['faucet','sink','shower','toilet','mirror','tub','vanity','accessories','pump','pipe','fitting','valve','filter','hose','trap']),
+  photos:z.array(z.string().regex(imagePattern)).max(5).optional(),demo:z.boolean().optional(),price:z.number().int().nonnegative().max(1e12), image:z.string().regex(imagePattern),
   names:z.object({ru:name,uz:name,en:name,zh:name,hi:name})
 });
 const catalog = z.object({
   items:z.array(item).max(1000).refine(items=>new Set(items.map(x=>x.id)).size===items.length),
-  contacts:z.object({telegram:z.string().regex(/^(?:https:\/\/t\.me\/[A-Za-z0-9_]+)?$/),phone:z.string().regex(/^(?:\+?[0-9 ()-]{5,30})?$/),map:z.union([z.literal(''),z.string().url().max(2000).startsWith('https://')])}),
+  contacts:z.object({channel:z.string().regex(/^(?:https:\/\/t\.me\/(?:[a-zA-Z0-9_]+|\+[a-zA-Z0-9_-]+))?$/).optional(),whatsapp:z.string().regex(/^(?:https:\/\/wa\.me\/[1-9][0-9]{6,14})?$/).optional(),telegram:z.string().regex(/^(?:https:\/\/t\.me\/[A-Za-z0-9_]+)?$/),phone:z.string().regex(/^(?:\+?[0-9 ()-]{5,30})?$/),map:z.union([z.literal(''),z.string().url().max(2000).startsWith('https://')])}),
   revision:z.string().max(150)
 });
 function reply(value:unknown,status=200){return Response.json(value,{status,headers:{'Cache-Control':'private, no-store'}})}
